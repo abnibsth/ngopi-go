@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NgopiGo - Premium Coffee & Bites</title>
+            <link rel="icon" href="{{ asset('images/logo.jpeg') }}" type="image/x-icon">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         /* Custom Premium Colors */
@@ -154,9 +155,9 @@
                     <br>
                     <span class="text-white text-4xl md:text-5xl">Taste the Excellence</span>
                 </h1>
-                
-                <p class="text-lg md:text-xl text-gray-300 mb-8 leading-relaxed max-w-2xl">
-                    Nikmati setiap tegukan kopi premium pilihan dengan cita rasa autentik. 
+
+                <p class="text-lg md:text-xl text-white mb-8 leading-relaxed max-w-2xl font-medium">
+                    Nikmati setiap tegukan kopi premium pilihan dengan cita rasa autentik.
                     Dari biji kopi terbaik langsung ke cangkir Anda.
                 </p>
                 
@@ -176,15 +177,15 @@
                 <div class="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-premium-gold/20">
                     <div>
                         <div class="text-3xl font-bold gradient-gold">20+</div>
-                        <div class="text-sm text-gray-400 mt-1">Menu Premium</div>
+                        <div class="text-sm text-white mt-1 font-medium">Menu Premium</div>
                     </div>
                     <div>
                         <div class="text-3xl font-bold gradient-gold">100%</div>
-                        <div class="text-sm text-gray-400 mt-1">Biji Arabika</div>
+                        <div class="text-sm text-white mt-1 font-medium">Biji Arabika</div>
                     </div>
                     <div>
                         <div class="text-3xl font-bold gradient-gold">24/7</div>
-                        <div class="text-sm text-gray-400 mt-1">Online Order</div>
+                        <div class="text-sm text-white mt-1 font-medium">Online Order</div>
                     </div>
                 </div>
             </div>
@@ -207,7 +208,7 @@
                 <h2 class="text-4xl md:text-5xl font-bold mt-4 mb-6">
                     <span class="gradient-gold">Menu Favorit</span>
                 </h2>
-                <p class="text-gray-400 max-w-2xl mx-auto text-lg">
+                <p class="text-white max-w-2xl mx-auto text-lg font-medium">
                     Pilihan menu terbaik dari barista profesional kami
                 </p>
             </div>
@@ -256,7 +257,7 @@
                                         <div class="flex items-start justify-between mb-3">
                                             <div class="flex-1">
                                                 <h4 class="text-xl font-bold text-white mb-2">{{ $product->name }}</h4>
-                                                <p class="text-sm text-gray-400 line-clamp-2">{{ $product->description }}</p>
+                                                <p class="text-sm text-white line-clamp-2 font-medium">{{ $product->description }}</p>
                                             </div>
                                         </div>
                                         
@@ -308,7 +309,7 @@
                                 </div>
                                 <div class="h-16 w-px bg-gradient-to-b from-transparent via-[#C69C6D] to-transparent"></div>
                                 <div class="text-center">
-                                    <p class="text-gray-400 text-sm mb-1 font-semibold uppercase tracking-wider">Total Item</p>
+                                    <p class="text-white text-sm mb-1 font-semibold uppercase tracking-wider">Total Item</p>
                                     <p class="text-4xl font-bold text-white" id="cartCount">0</p>
                                 </div>
                             </div>
@@ -335,20 +336,20 @@
                     <h2 class="text-4xl md:text-5xl font-bold mt-4 mb-6 text-white">
                         Crafted with <span class="gradient-gold">Passion</span>
                     </h2>
-                    <p class="text-gray-300 text-lg leading-relaxed mb-6">
-                        NgopiGo menghadirkan pengalaman kopi premium dengan biji kopi pilihan dari seluruh nusantara. 
+                    <p class="text-white text-lg leading-relaxed mb-6 font-medium">
+                        NgopiGo menghadirkan pengalaman kopi premium dengan biji kopi pilihan dari seluruh nusantara.
                         Setiap cangkir dibuat dengan hati-hati oleh barista profesional kami.
                     </p>
                     <div class="grid grid-cols-2 gap-6 mt-8">
                         <div class="bg-premium-black/50 p-6 rounded-xl border border-premium-gold/20">
                             <div class="text-4xl mb-3">🌟</div>
                             <div class="text-2xl font-bold gradient-gold mb-1">Premium</div>
-                            <div class="text-sm text-gray-400">Kualitas Terbaik</div>
+                            <div class="text-sm text-white font-medium">Kualitas Terbaik</div>
                         </div>
                         <div class="bg-premium-black/50 p-6 rounded-xl border border-premium-gold/20">
                             <div class="text-4xl mb-3">👨‍🍳</div>
                             <div class="text-2xl font-bold gradient-gold mb-1">Professional</div>
-                            <div class="text-sm text-gray-400">Barista Ahli</div>
+                            <div class="text-sm text-white font-medium">Barista Ahli</div>
                         </div>
                     </div>
                 </div>
@@ -367,13 +368,13 @@
         <div class="container mx-auto px-4">
             <div class="text-center">
                 <h3 class="text-3xl font-bold gradient-gold mb-4">NgopiGo</h3>
-                <p class="text-gray-400 mb-6">Premium Coffee Experience</p>
+                <p class="text-white mb-6 font-medium">Premium Coffee Experience</p>
                 <div class="flex justify-center gap-6 mb-8">
                     <a href="#" class="text-premium-gold hover:text-gold-light transition-colors text-2xl">📱</a>
                     <a href="#" class="text-premium-gold hover:text-gold-light transition-colors text-2xl">📧</a>
                     <a href="#" class="text-premium-gold hover:text-gold-light transition-colors text-2xl">📍</a>
                 </div>
-                <p class="text-gray-500 text-sm">
+                <p class="text-white text-sm font-medium">
                     © {{ date('Y') }} NgopiGo. All rights reserved.
                 </p>
             </div>

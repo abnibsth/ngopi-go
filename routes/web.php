@@ -15,6 +15,8 @@ Route::get('/', function () {
 Route::get('/pesan/{tableNumber?}', [OrderController::class, 'create'])->name('order.create');
 Route::post('/pesan', [OrderController::class, 'store'])->name('order.store');
 Route::get('/pesanan/{orderNumber}', [OrderController::class, 'show'])->name('order.success');
+Route::get('/pembayaran/{order}', [OrderController::class, 'payment'])->name('order.payment');
+Route::post('/midtrans/callback', [OrderController::class, 'midtransCallback'])->name('midtrans.callback');
 
 // Admin Routes
 Route::prefix('admin')->name('admin.')->group(function () {
