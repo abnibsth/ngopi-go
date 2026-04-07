@@ -1,95 +1,59 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - NgopiGo</title>
-    <link rel="icon" href="{{ asset('images/logo.jpeg') }}" type="image/x-icon">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        /* Custom Premium Colors - Same as Landing Page */
-        :root {
-            --black: #121212;
-            --dark-brown: #2E1F1A;
-            --gold: #C69C6D;
-            --gold-light: #D4AF7A;
-            --cream: #F5F0E6;
-        }
+@extends('admin.layouts.app')
 
-        .bg-premium-black { background-color: var(--black); }
-        .bg-premium-brown { background-color: var(--dark-brown); }
-        .bg-premium-gold { background-color: var(--gold); }
-        .text-premium-gold { color: var(--gold); }
-        .border-premium-gold { border-color: var(--gold); }
+@section('title', 'Dashboard')
 
-        /* Gradient Text */
-        .gradient-gold {
-            background: linear-gradient(135deg, #C69C6D 0%, #F5DEB3 50%, #C69C6D 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+@push('styles')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    /* Custom Premium Colors */
+    :root {
+        --black: #121212;
+        --dark-brown: #2E1F1A;
+        --gold: #C69C6D;
+        --gold-light: #D4AF7A;
+        --cream: #F5F0E6;
+    }
 
-        /* Premium Card */
-        .premium-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .premium-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(198, 156, 109, 0.2);
-        }
+    .bg-premium-black { background-color: var(--black); }
+    .bg-premium-brown { background-color: var(--dark-brown); }
+    .bg-premium-gold { background-color: var(--gold); }
+    .text-premium-gold { color: var(--gold); }
+    .border-premium-gold { border-color: var(--gold); }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--dark-brown);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--gold);
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--gold-light);
-        }
-    </style>
-</head>
-<body class="bg-premium-black text-[#F5F0E6] min-h-screen">
+    /* Gradient Text */
+    .gradient-gold {
+        background: linear-gradient(135deg, #C69C6D 0%, #F5DEB3 50%, #C69C6D 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
 
-    <!-- Header -->
-    <header class="bg-gradient-to-r from-[#2E1F1A] to-[#1a120f] border-b border-[#C69C6D]/30 shadow-lg">
-        <div class="container mx-auto px-4 py-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h1 class="text-3xl font-bold gradient-gold">🎛️ Dashboard Admin</h1>
-                    <p class="text-[#C69C6D] mt-1">Statistik Penjualan NgopiGo</p>
-                </div>
-                <div class="flex items-center gap-4">
-                    <div class="text-right text-white">
-                        <p class="text-sm text-[#C69C6D]">Halo,</p>
-                        <p class="font-semibold text-[#F5F0E6]">{{ auth()->guard('admin')->user()->name }}</p>
-                    </div>
-                    <form action="{{ route('admin.logout') }}" method="POST">
-                        @csrf
-                        <button type="submit"
-                                class="bg-[#C69C6D] hover:bg-[#D4AF7A] text-[#121212] font-semibold py-2 px-4 rounded-lg transition shadow-lg hover:shadow-[#C69C6D]/50">
-                            🚪 Logout
-                        </button>
-                    </form>
-                    <a href="{{ route('order.create') }}"
-                       class="bg-[#C69C6D]/20 hover:bg-[#C69C6D]/40 border border-[#C69C6D]/50 text-[#F5F0E6] font-semibold py-2 px-4 rounded-lg transition backdrop-blur-sm">
-                        🛒 Ke Website
-                    </a>
-                </div>
-            </div>
+    /* Premium Card */
+    .premium-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .premium-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 40px rgba(198, 156, 109, 0.2);
+    }
+</style>
+@endpush
+
+@section('content')
+<!-- Page Header -->
+<div class="mb-8">
+    <div class="flex items-center justify-between">
+        <div>
+            <h2 class="text-3xl font-bold gradient-gold">📊 Dashboard</h2>
+            <p class="text-[#C69C6D] mt-1">Statistik Penjualan NgopiGo</p>
         </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
+        <div class="flex items-center gap-3">
+            <span class="text-sm text-[#C69C6D] bg-[#C69C6D]/20 px-4 py-2 rounded-lg border border-[#C69C6D]/30">
+                📅 {{ now()->format('d F Y') }}
+            </span>
+        </div>
+    </div>
+</div>
         <!-- Quick Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <!-- Total Pendapatan -->
@@ -441,5 +405,4 @@
             }
         });
     </script>
-</body>
-</html>
+@endsection

@@ -70,20 +70,30 @@
                         <span class="text-[#C69C6D]">Halo,</span>
                         <span class="font-semibold ml-1 text-[#F5F0E6]">{{ auth()->guard('admin')->user()->name }}</span>
                     </div>
+                    @if(auth()->guard('admin')->user()->canCreateWalkthroughOrder())
+                    <a href="{{ route('admin.orders.walkthrough.create') }}"
+                       class="bg-green-600/20 hover:bg-green-600/40 border border-green-600/50 text-green-400 font-semibold py-2 px-4 rounded-lg transition backdrop-blur-sm">
+                        ➕ Buat Pesanan
+                    </a>
+                    @endif
                     <form action="{{ route('admin.logout') }}" method="POST">
                         @csrf
                         <button type="submit" class="bg-[#C69C6D] hover:bg-[#D4AF7A] text-[#121212] font-semibold py-2 px-4 rounded-lg transition text-sm shadow-lg hover:shadow-[#C69C6D]/50">
                             🚪 Logout
                         </button>
                     </form>
+                    @if(auth()->guard('admin')->user()->canManageDashboard())
                     <a href="{{ route('admin.products.index') }}"
                        class="bg-[#C69C6D]/20 hover:bg-[#C69C6D]/40 border border-[#C69C6D]/50 text-[#F5F0E6] font-semibold py-2 px-4 rounded-lg transition backdrop-blur-sm">
                         📦 Produk
                     </a>
+                    @endif
+                    @if(auth()->guard('admin')->user()->canManageKitchen())
                     <a href="{{ route('admin.kitchen') }}"
                        class="bg-[#C69C6D]/20 hover:bg-[#C69C6D]/40 border border-[#C69C6D]/50 text-[#F5F0E6] font-semibold py-2 px-4 rounded-lg transition backdrop-blur-sm">
                         👨‍🍳 Dapur
                     </a>
+                    @endif
                     <a href="{{ route('order.create') }}"
                        class="bg-[#C69C6D]/20 hover:bg-[#C69C6D]/40 border border-[#C69C6D]/50 text-[#F5F0E6] font-semibold py-2 px-4 rounded-lg transition backdrop-blur-sm">
                         🛒 Ke Website
@@ -110,6 +120,7 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-[#C69C6D] uppercase tracking-wider">Meja</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-[#C69C6D] uppercase tracking-wider">Customer</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-[#C69C6D] uppercase tracking-wider">Pembayaran</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-[#C69C6D] uppercase tracking-wider">Status Bayar</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-[#C69C6D] uppercase tracking-wider">Items</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-[#C69C6D] uppercase tracking-wider">Total</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-[#C69C6D] uppercase tracking-wider">Status</th>
@@ -146,6 +157,20 @@
                                         💳 Online
                                     @endif
                                 </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                @if(auth()->guard('admin')->user()->canUpdatePaymentStatus())
+                                <a href="{{ route('admin.orders.payment', $order->id) }}"
+                                   class="inline-flex items-center gap-2 px-3 py-1 rounded-lg text-xs font-medium transition
+                                       {{ $order->getPaymentStatusBadgeClass() }} hover:opacity-80">
+                                    {!! $order->getPaymentStatusLabel() !!}
+                                </a>
+                                @else
+                                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-lg text-xs font-medium
+                                    {{ $order->getPaymentStatusBadgeClass() }}">
+                                    {!! $order->getPaymentStatusLabel() !!}
+                                </span>
+                                @endif
                             </td>
                             <td class="px-6 py-4">
                                 <div class="text-sm text-[#F5F0E6]">
@@ -186,19 +211,29 @@
                                 <span class="text-xs text-[#C69C6D]/70">{{ $order->created_at->diffForHumans() }}</span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                <a href="{{ route('admin.orders.edit', $order->id) }}"
-                                   class="text-[#60a5fa] hover:text-[#93c5fd] mr-3 transition">
-                                    ✏️ Edit
-                                </a>
-                                <form action="{{ route('admin.orders.destroy', $order->id) }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button"
-                                            onclick="if(confirm('Hapus pesanan ini?')) this.closest('form').submit()"
-                                            class="text-[#f87171] hover:text-[#fca5a5] transition">
-                                        🗑️ Hapus
-                                    </button>
-                                </form>
+                                <div class="flex items-center gap-2">
+                                    <a href="{{ route('admin.orders.edit', $order->id) }}"
+                                       class="text-[#60a5fa] hover:text-[#93c5fd] transition" title="Edit">
+                                        ✏️
+                                    </a>
+                                    @if(auth()->guard('admin')->user()->canUpdatePaymentStatus())
+                                    <a href="{{ route('admin.orders.receipt', $order->id) }}"
+                                       class="text-[#4ade80] hover:text-[#6ee7b7] transition" title="Cetak Receipt">
+                                        🧾
+                                    </a>
+                                    @endif
+                                    @if(auth()->guard('admin')->user()->isAdmin())
+                                    <form action="{{ route('admin.orders.destroy', $order->id) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="button"
+                                                onclick="if(confirm('Hapus pesanan ini?')) this.closest('form').submit()"
+                                                class="text-[#f87171] hover:text-[#fca5a5] transition" title="Hapus">
+                                            🗑️
+                                        </button>
+                                    </form>
+                                    @endif
+                                </div>
                             </td>
                         </tr>
                         @empty

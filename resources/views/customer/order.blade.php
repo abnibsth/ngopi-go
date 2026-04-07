@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -234,17 +234,16 @@
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 @foreach($products[$categoryKey] as $product)
-                                <div class="product-card premium-card gold-border-animate bg-premium-brown/50 rounded-2xl overflow-hidden border border-premium-gold/20 cursor-pointer" 
+                                <div class="product-card premium-card gold-border-animate bg-premium-brown/50 rounded-2xl overflow-hidden border border-premium-gold/20 cursor-pointer"
                                      data-product-id="{{ $product->id }}"
                                      data-product-name="{{ $product->name }}"
                                      data-product-price="{{ $product->price }}">
                                     <!-- Product Image -->
                                     @if($product->image)
-                                    <div class="relative h-48 overflow-hidden">
-                                        <img src="{{ asset('storage/' . $product->image) }}" 
-                                             alt="{{ $product->name }}" 
+                                    <div class="relative h-48 overflow-hidden bg-gradient-to-br from-premium-brown/30 to-premium-black/30">
+                                        <img src="{{ asset('storage/' . $product->image) }}"
+                                             alt="{{ $product->name }}"
                                              class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500">
-                                        <div class="absolute inset-0 bg-gradient-to-t from-premium-brown to-transparent"></div>
                                     </div>
                                     @else
                                     <div class="h-48 bg-gradient-to-br from-premium-brown to-premium-black flex items-center justify-center">
@@ -328,55 +327,221 @@
     </section>
 
     <!-- About Section -->
-    <section id="about" class="py-20 bg-premium-brown">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+    <section id="about" class="py-24 bg-gradient-to-b from-premium-brown to-premium-black relative overflow-hidden">
+        <!-- Background Decoration -->
+        <div class="absolute top-0 left-0 w-96 h-96 bg-premium-gold/5 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-premium-gold/5 rounded-full blur-3xl"></div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <!-- Section Header -->
+            <div class="text-center mb-16">
+                <span class="text-premium-gold text-sm font-medium tracking-wider uppercase">Our Story</span>
+                <h2 class="text-4xl md:text-5xl font-bold mt-4 mb-6 text-white">
+                    Crafted with <span class="gradient-gold">Passion</span>
+                </h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-transparent via-premium-gold to-transparent mx-auto"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                <!-- Left Content - Story -->
                 <div>
-                    <span class="text-premium-gold text-sm font-medium tracking-wider uppercase">Our Story</span>
-                    <h2 class="text-4xl md:text-5xl font-bold mt-4 mb-6 text-white">
-                        Crafted with <span class="gradient-gold">Passion</span>
-                    </h2>
-                    <p class="text-white text-lg leading-relaxed mb-6 font-medium">
-                        NgopiGo menghadirkan pengalaman kopi premium dengan biji kopi pilihan dari seluruh nusantara.
-                        Setiap cangkir dibuat dengan hati-hati oleh barista profesional kami.
-                    </p>
-                    <div class="grid grid-cols-2 gap-6 mt-8">
-                        <div class="bg-premium-black/50 p-6 rounded-xl border border-premium-gold/20">
-                            <div class="text-4xl mb-3">🌟</div>
-                            <div class="text-2xl font-bold gradient-gold mb-1">Premium</div>
-                            <div class="text-sm text-white font-medium">Kualitas Terbaik</div>
+                    <div class="relative">
+                        <div class="absolute -left-4 -top-4 w-20 h-20 border-l-4 border-t-4 border-premium-gold/30 rounded-tl-3xl"></div>
+                        <div class="absolute -right-4 -bottom-4 w-20 h-20 border-r-4 border-b-4 border-premium-gold/30 rounded-br-3xl"></div>
+                        
+                        <div class="bg-premium-black/40 backdrop-blur-sm p-8 rounded-3xl border border-premium-gold/20">
+                            <p class="text-white text-lg leading-relaxed mb-6 font-medium">
+                                <span class="text-premium-gold font-bold">NgopiGo</span> menghadirkan pengalaman kopi premium dengan biji kopi pilihan dari seluruh nusantara. 
+                                Setiap cangkir dibuat dengan hati-hati oleh barista profesional kami.
+                            </p>
+                            <p class="text-white text-base leading-relaxed mb-6 font-medium">
+                                Kami berkomitmen untuk menyajikan kualitas terbaik, dari biji kopi yang dipetik dari petani lokal hingga menjadi secangkir kopi yang sempurna di tangan Anda.
+                            </p>
+                            
+                            <!-- Stats -->
+                            <div class="grid grid-cols-3 gap-4 mt-8 pt-8 border-t border-premium-gold/20">
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold gradient-gold">20+</div>
+                                    <div class="text-xs text-white mt-1 font-medium">Menu Premium</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold gradient-gold">100%</div>
+                                    <div class="text-xs text-white mt-1 font-medium">Arabika</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold gradient-gold">24/7</div>
+                                    <div class="text-xs text-white mt-1 font-medium">Online</div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="bg-premium-black/50 p-6 rounded-xl border border-premium-gold/20">
-                            <div class="text-4xl mb-3">👨‍🍳</div>
-                            <div class="text-2xl font-bold gradient-gold mb-1">Professional</div>
-                            <div class="text-sm text-white font-medium">Barista Ahli</div>
+                    </div>
+                    
+                    <!-- Feature Cards -->
+                    <div class="grid grid-cols-2 gap-6 mt-8">
+                        <div class="group bg-gradient-to-br from-premium-black/80 to-premium-black/40 p-6 rounded-2xl border border-premium-gold/20 hover:border-premium-gold/40 transition-all duration-300 hover:transform hover:-translate-y-1">
+                            <div class="text-4xl mb-3">⭐</div>
+                            <div class="text-xl font-bold gradient-gold mb-1">Premium Quality</div>
+                            <div class="text-sm text-white/70 font-medium">Kualitas terbaik</div>
+                        </div>
+                        <div class="group bg-gradient-to-br from-premium-black/80 to-premium-black/40 p-6 rounded-2xl border border-premium-gold/20 hover:border-premium-gold/40 transition-all duration-300 hover:transform hover:-translate-y-1">
+                            <div class="text-4xl mb-3">👨‍</div>
+                            <div class="text-xl font-bold gradient-gold mb-1">Pro Barista</div>
+                            <div class="text-sm text-white/70 font-medium">Ahli kopi</div>
+                        </div>
+                        <div class="group bg-gradient-to-br from-premium-black/80 to-premium-black/40 p-6 rounded-2xl border border-premium-gold/20 hover:border-premium-gold/40 transition-all duration-300 hover:transform hover:-translate-y-1">
+                            <div class="text-4xl mb-3">🌿</div>
+                            <div class="text-xl font-bold gradient-gold mb-1">Fresh</div>
+                            <div class="text-sm text-white/70 font-medium">Bahan segar</div>
+                        </div>
+                        <div class="group bg-gradient-to-br from-premium-black/80 to-premium-black/40 p-6 rounded-2xl border border-premium-gold/20 hover:border-premium-gold/40 transition-all duration-300 hover:transform hover:-translate-y-1">
+                            <div class="text-4xl mb-3">⚡</div>
+                            <div class="text-xl font-bold gradient-gold mb-1">Fast</div>
+                            <div class="text-sm text-white/70 font-medium">Pelayanan cepat</div>
                         </div>
                     </div>
                 </div>
-                <div class="relative">
-                    <div class="absolute inset-0 bg-premium-gold/20 blur-3xl rounded-full"></div>
-                    <img src="https://images.unsplash.com/photo-1442512595331-e89e7385a861?w=800&h=600&fit=crop" 
-                         alt="Coffee Art" 
-                         class="relative rounded-2xl shadow-2xl border-2 border-premium-gold/30 w-full">
+                
+                <!-- Right Content - Images Grid -->
+                <div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-4">
+                            <div class="relative group overflow-hidden rounded-2xl border-2 border-premium-gold/30">
+                                <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=400&h=500&fit=crop"
+                                     alt="Premium Coffee"
+                                     class="w-full h-64 object-cover transform group-hover:scale-110 transition-transform duration-700">
+                                <div class="absolute inset-0 bg-gradient-to-t from-premium-brown/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            </div>
+                            <div class="relative group overflow-hidden rounded-2xl border-2 border-premium-gold/30">
+                                <img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=400&h=300&fit=crop"
+                                     alt="Coffee Beans"
+                                     class="w-full h-40 object-cover transform group-hover:scale-110 transition-transform duration-700">
+                                <div class="absolute inset-0 bg-gradient-to-t from-premium-brown/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            </div>
+                        </div>
+                        <div class="space-y-4 pt-8">
+                            <div class="relative group overflow-hidden rounded-2xl border-2 border-premium-gold/30">
+                                <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&h=300&fit=crop"
+                                     alt="Coffee Art"
+                                     class="w-full h-40 object-cover transform group-hover:scale-110 transition-transform duration-700">
+                                <div class="absolute inset-0 bg-gradient-to-t from-premium-brown/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            </div>
+                            <div class="relative group overflow-hidden rounded-2xl border-2 border-premium-gold/30">
+                                <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=500&fit=crop"
+                                     alt="Coffee Cup"
+                                     class="w-full h-64 object-cover transform group-hover:scale-110 transition-transform duration-700">
+                                <div class="absolute inset-0 bg-gradient-to-t from-premium-brown/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Social Media Section -->
+            <div class="mt-20 text-center">
+                <h3 class="text-2xl font-bold text-white mb-2">Follow Us</h3>
+                <p class="text-white/70 mb-8 font-medium">Ikuti kami di media sosial untuk update terbaru dan promo spesial!</p>
+                
+                <div class="flex justify-center gap-4 flex-wrap">
+                    <!-- Instagram -->
+                    <a href="https://instagram.com/ngopigo" target="_blank" 
+                       class="group flex items-center gap-3 bg-gradient-to-r from-purple-900/50 to-pink-900/50 hover:from-purple-800/70 hover:to-pink-800/70 px-6 py-4 rounded-2xl border border-premium-gold/30 hover:border-premium-gold transition-all duration-300 transform hover:-translate-y-1">
+                        <div class="text-3xl">📷</div>
+                        <div class="text-left">
+                            <div class="text-white font-bold">Instagram</div>
+                            <div class="text-premium-gold text-sm">@ngopigo</div>
+                        </div>
+                    </a>
+                    
+                    <!-- Facebook -->
+                    <a href="https://facebook.com/ngopigo" target="_blank" 
+                       class="group flex items-center gap-3 bg-gradient-to-r from-blue-900/50 to-blue-800/50 hover:from-blue-800/70 hover:to-blue-700/70 px-6 py-4 rounded-2xl border border-premium-gold/30 hover:border-premium-gold transition-all duration-300 transform hover:-translate-y-1">
+                        <div class="text-3xl"></div>
+                        <div class="text-left">
+                            <div class="text-white font-bold">Facebook</div>
+                            <div class="text-premium-gold text-sm">NgopiGo</div>
+                        </div>
+                    </a>
+                    
+                    <!-- TikTok -->
+                    <a href="https://tiktok.com/@ngopigo" target="_blank" 
+                       class="group flex items-center gap-3 bg-gradient-to-r from-gray-900/50 to-gray-800/50 hover:from-gray-800/70 hover:to-gray-700/70 px-6 py-4 rounded-2xl border border-premium-gold/30 hover:border-premium-gold transition-all duration-300 transform hover:-translate-y-1">
+                        <div class="text-3xl">🎵</div>
+                        <div class="text-left">
+                            <div class="text-white font-bold">TikTok</div>
+                            <div class="text-premium-gold text-sm">@ngopigo</div>
+                        </div>
+                    </a>
+                    
+                    <!-- WhatsApp -->
+                    <a href="https://wa.me/6281234567890" target="_blank" 
+                       class="group flex items-center gap-3 bg-gradient-to-r from-green-900/50 to-green-800/50 hover:from-green-800/70 hover:to-green-700/70 px-6 py-4 rounded-2xl border border-premium-gold/30 hover:border-premium-gold transition-all duration-300 transform hover:-translate-y-1">
+                        <div class="text-3xl">💬</div>
+                        <div class="text-left">
+                            <div class="text-white font-bold">WhatsApp</div>
+                            <div class="text-premium-gold text-sm">+62 812-3456-7890</div>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-premium-black py-12 border-t border-premium-gold/20">
+    <footer class="bg-premium-black py-16 border-t border-premium-gold/20">
         <div class="container mx-auto px-4">
-            <div class="text-center">
-                <h3 class="text-3xl font-bold gradient-gold mb-4">NgopiGo</h3>
-                <p class="text-white mb-6 font-medium">Premium Coffee Experience</p>
-                <div class="flex justify-center gap-6 mb-8">
-                    <a href="#" class="text-premium-gold hover:text-gold-light transition-colors text-2xl">📱</a>
-                    <a href="#" class="text-premium-gold hover:text-gold-light transition-colors text-2xl">📧</a>
-                    <a href="#" class="text-premium-gold hover:text-gold-light transition-colors text-2xl">📍</a>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+                <!-- Brand Info -->
+                <div class="text-center md:text-left">
+                    <h3 class="text-3xl font-bold gradient-gold mb-4">NgopiGo</h3>
+                    <p class="text-white/80 mb-4 font-medium">Premium Coffee Experience</p>
+                    <p class="text-white/60 text-sm font-medium">Menghadirkan kenikmatan kopi terbaik sejak 2024</p>
                 </div>
-                <p class="text-white text-sm font-medium">
-                    © {{ date('Y') }} NgopiGo. All rights reserved.
-                </p>
+                
+                <!-- Contact Info -->
+                <div class="text-center">
+                    <h4 class="text-lg font-bold text-white mb-4">Kontak Kami</h4>
+                    <div class="space-y-2">
+                        <p class="text-white/70 text-sm font-medium">📍 Jakarta, Indonesia</p>
+                        <p class="text-white/70 text-sm font-medium">📧 hello@ngopigo.com</p>
+                        <p class="text-white/70 text-sm font-medium">📱 +62 812-3456-7890</p>
+                    </div>
+                </div>
+                
+                <!-- Social Media -->
+                <div class="text-center md:text-right">
+                    <h4 class="text-lg font-bold text-white mb-4">Follow Us</h4>
+                    <div class="flex justify-center md:justify-end gap-4">
+                        <a href="https://instagram.com/ngopigo" target="_blank" 
+                           class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white text-xl hover:scale-110 transition-transform shadow-lg">
+                            📷
+                        </a>
+                        <a href="https://facebook.com/ngopigo" target="_blank" 
+                           class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center text-white text-xl hover:scale-110 transition-transform shadow-lg">
+                            
+                        </a>
+                        <a href="https://tiktok.com/@ngopigo" target="_blank" 
+                           class="w-12 h-12 rounded-full bg-gradient-to-br from-gray-700 to-black flex items-center justify-center text-white text-xl hover:scale-110 transition-transform shadow-lg">
+                            🎵
+                        </a>
+                        <a href="https://wa.me/6281234567890" target="_blank" 
+                           class="w-12 h-12 rounded-full bg-gradient-to-br from-green-600 to-green-800 flex items-center justify-center text-white text-xl hover:scale-110 transition-transform shadow-lg">
+                            💬
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bottom Bar -->
+            <div class="border-t border-premium-gold/20 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                    <p class="text-white/60 text-sm font-medium text-center md:text-left">
+                        © {{ date('Y') }} NgopiGo. All rights reserved.
+                    </p>
+                    <div class="flex gap-6">
+                        <a href="#" class="text-white/60 hover:text-premium-gold text-sm font-medium transition-colors">Privacy Policy</a>
+                        <a href="#" class="text-white/60 hover:text-premium-gold text-sm font-medium transition-colors">Terms of Service</a>
+                    </div>
+                </div>
             </div>
         </div>
     </footer>
@@ -633,3 +798,4 @@
     </script>
 </body>
 </html>
+

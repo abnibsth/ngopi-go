@@ -39,7 +39,19 @@ class AuthController extends Controller
                 ]);
             }
 
-            return redirect()->intended(route('admin.dashboard'));
+            // Redirect berdasarkan role
+            $admin = Auth::guard('admin')->user();
+            
+            if ($admin->isAdmin()) {
+                return redirect()->intended(route('admin.dashboard'));
+            } elseif ($admin->isCashier()) {
+                return redirect()->intended(route('admin.orders.index'));
+            } elseif ($admin->isKitchen()) {
+                return redirect()->intended(route('admin.kitchen'));
+            }
+            
+            // Default fallback
+            return redirect()->intended(route('admin.history'));
         }
 
         return back()->withErrors([

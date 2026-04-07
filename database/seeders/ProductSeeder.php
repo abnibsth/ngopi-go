@@ -19,6 +19,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Kopi espresso murni dengan rasa yang kuat dan kaya',
                 'price' => 18000,
                 'category' => 'coffee',
+                'image' => 'products/espresso.jpg',
                 'is_available' => true,
             ],
             [
@@ -26,6 +27,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Espresso dengan air panas, rasa yang lebih ringan',
                 'price' => 20000,
                 'category' => 'coffee',
+                'image' => 'products/americano.jpg',
                 'is_available' => true,
             ],
             [
@@ -33,6 +35,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Espresso dengan susu steamed dan foam yang creamy',
                 'price' => 25000,
                 'category' => 'coffee',
+                'image' => 'products/cappuccino.jpg',
                 'is_available' => true,
             ],
             [
@@ -40,6 +43,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Espresso dengan susu steamed yang lembut',
                 'price' => 26000,
                 'category' => 'coffee',
+                'image' => 'products/caffe-latte.jpg',
                 'is_available' => true,
             ],
             [
@@ -47,6 +51,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Espresso dengan vanilla syrup, susu, dan caramel drizzle',
                 'price' => 30000,
                 'category' => 'coffee',
+                'image' => 'products/caramel-macchiato.jpg',
                 'is_available' => true,
             ],
             [
@@ -54,6 +59,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Espresso dengan coklat dan susu steamed',
                 'price' => 28000,
                 'category' => 'coffee',
+                'image' => 'products/mocha.jpg',
                 'is_available' => true,
             ],
             // Non Coffee
@@ -62,6 +68,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Coklat panas atau dingin yang creamy',
                 'price' => 22000,
                 'category' => 'non-coffee',
+                'image' => 'products/chocolate.jpg',
                 'is_available' => true,
             ],
             [
@@ -69,6 +76,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Matcha Jepang dengan susu steamed',
                 'price' => 26000,
                 'category' => 'non-coffee',
+                'image' => 'products/matcha-latte.jpg',
                 'is_available' => true,
             ],
             [
@@ -76,6 +84,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Taro dengan susu yang creamy dan manis',
                 'price' => 24000,
                 'category' => 'non-coffee',
+                'image' => 'products/taro-latte.jpg',
                 'is_available' => true,
             ],
             [
@@ -83,6 +92,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Minuman red velvet dengan susu yang unik',
                 'price' => 25000,
                 'category' => 'non-coffee',
+                'image' => 'products/red-velvet.jpg',
                 'is_available' => true,
             ],
             [
@@ -90,6 +100,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Teh leci yang segar dan manis',
                 'price' => 18000,
                 'category' => 'non-coffee',
+                'image' => 'products/lychee-tea.jpg',
                 'is_available' => true,
             ],
             [
@@ -97,6 +108,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Teh lemon yang segar',
                 'price' => 16000,
                 'category' => 'non-coffee',
+                'image' => 'products/lemon-tea.jpg',
                 'is_available' => true,
             ],
             // Food
@@ -105,6 +117,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Nasi goreng tradisional dengan telur dan ayam',
                 'price' => 35000,
                 'category' => 'food',
+                'image' => 'products/nasi-goreng.jpg',
                 'is_available' => true,
             ],
             [
@@ -112,6 +125,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Mie goreng dengan bumbu jawa yang khas',
                 'price' => 32000,
                 'category' => 'food',
+                'image' => 'products/mie-goreng.jpg',
                 'is_available' => true,
             ],
             [
@@ -119,6 +133,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Ayam goreng geprek dengan sambal bawang',
                 'price' => 30000,
                 'category' => 'food',
+                'image' => 'products/ayam-geprek.jpg',
                 'is_available' => true,
             ],
             [
@@ -126,6 +141,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Spaghetti dengan saus daging bolognese',
                 'price' => 38000,
                 'category' => 'food',
+                'image' => 'products/spaghetti-bolognese.jpg',
                 'is_available' => true,
             ],
             // Snack
@@ -134,6 +150,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Kentang goreng crispy dengan bumbu',
                 'price' => 15000,
                 'category' => 'snack',
+                'image' => 'products/kentang-goreng.jpg',
                 'is_available' => true,
             ],
             [
@@ -141,6 +158,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Roti bakar dengan berbagai pilihan topping',
                 'price' => 18000,
                 'category' => 'snack',
+                'image' => 'products/roti-bakar.jpg',
                 'is_available' => true,
             ],
             [
@@ -148,6 +166,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Pisang goreng crispy dengan madu',
                 'price' => 16000,
                 'category' => 'snack',
+                'image' => 'products/pisang-goreng.jpg',
                 'is_available' => true,
             ],
             [
@@ -155,6 +174,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Kentang goreng crispy ala barat',
                 'price' => 18000,
                 'category' => 'snack',
+                'image' => 'products/french-fries.jpg',
                 'is_available' => true,
             ],
         ];

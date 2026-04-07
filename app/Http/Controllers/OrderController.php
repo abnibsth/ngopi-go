@@ -288,4 +288,141 @@ class OrderController extends Controller
 
         return view('admin.kitchen', compact('orders'));
     }
+
+    /**
+     * Display order history.
+     */
+    public function history()
+    {
+        $orders = Order::with('orderItems.product')
+            ->whereIn('status', ['completed', 'cancelled'])
+            ->latest()
+            ->paginate(20);
+
+        return view('admin.history', compact('orders'));
+    }
+
+    /**
+     * Show payment update form for cashier.
+     */
+    public function updatePayment($id)
+    {
+        $order = Order::findOrFail($id);
+        return view('admin.orders.payment', compact('order'));
+    }
+
+    /**
+     * Update payment status for cashier.
+     */
+    public function updatePaymentStatus(Request $request, $id)
+    {
+        $order = Order::findOrFail($id);
+        
+        $request->validate([
+            'payment_status' => 'required|in:pending,paid',
+        ]);
+
+        $order->update([
+            'payment_status' => $request->payment_status,
+        ]);
+
+        return redirect()->route('admin.orders.index')
+            ->with('success', 'Status pembayaran berhasil diupdate.');
+    }
+
+    /**
+     * Print receipt for order.
+     */
+    public function printReceipt($id)
+    {
+        $order = Order::with('orderItems.product')->findOrFail($id);
+        return view('admin.orders.receipt', compact('order'));
+    }
+
+    /**
+     * Show walkthrough order creation form for cashier.
+     */
+    public function walkthroughCreate()
+    {
+        $products = \App\Models\Product::where('is_available', true)->get()->groupBy('category');
+        $tables = range(1, 20); // Meja 1-20
+        
+        return view('admin.orders.walkthrough', compact('products', 'tables'));
+    }
+
+    /**
+     * Store walkthrough order created by cashier.
+     */
+    public function walkthroughStore(Request $request)
+    {
+        \Log::info('=== WALKTHROUGH ORDER STORE ===');
+        
+        $request->validate([
+            'table_number' => 'required|string',
+            'customer_name' => 'required|string|max:255',
+            'phone' => 'required|string',
+            'payment_method' => 'required|in:cod,online',
+            'items' => 'required|array|min:1',
+            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.quantity' => 'required|integer|min:1',
+        ]);
+
+        \DB::beginTransaction();
+        try {
+            // Get queue number for today
+            $todayStart = now()->startOfDay();
+            $todayEnd = now()->endOfDay();
+            $queueNumber = \App\Models\Order::whereBetween('created_at', [$todayStart, $todayEnd])->count() + 1;
+            $formattedQueue = str_pad($queueNumber, 3, '0', STR_PAD_LEFT);
+            $formattedTable = str_pad($request->table_number, 2, '0', STR_PAD_LEFT);
+            
+            // Format: ORD-{meja}-{antrian}
+            $orderNumber = 'ORD-' . $formattedTable . '-' . $formattedQueue;
+            
+            $totalAmount = 0;
+
+            // Hitung total
+            foreach ($request->items as $item) {
+                $product = \App\Models\Product::find($item['product_id']);
+                $subtotal = $product->price * $item['quantity'];
+                $totalAmount += $subtotal;
+            }
+
+            // Buat order
+            $order = \App\Models\Order::create([
+                'order_number' => $orderNumber,
+                'table_number' => $request->table_number,
+                'customer_name' => $request->customer_name,
+                'phone' => $request->phone,
+                'status' => 'pending',
+                'payment_method' => $request->payment_method,
+                'total_amount' => $totalAmount,
+            ]);
+
+            // Buat order items
+            foreach ($request->items as $item) {
+                $product = \App\Models\Product::find($item['product_id']);
+                $subtotal = $product->price * $item['quantity'];
+
+                \App\Models\OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $item['product_id'],
+                    'quantity' => $item['quantity'],
+                    'subtotal' => $subtotal,
+                ]);
+            }
+
+            \DB::commit();
+
+            // Redirect ke receipt untuk cetak
+            return redirect()->route('admin.orders.receipt', $order->id)
+                ->with('success', 'Pesanan berhasil dibuat!');
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            \Log::error('Walkthrough Order Error: ' . $e->getMessage());
+            
+            return back()->withErrors(['error' => 'Gagal membuat pesanan: ' . $e->getMessage()])
+                ->withInput();
+        }
+    }
 }

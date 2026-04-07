@@ -24,19 +24,29 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    // Dashboard - Admin only
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard')->middleware(['admin', 'role:admin']);
+
+    // Product Management - Admin only
+    Route::resource('products', ProductController::class)->middleware(['admin', 'role:admin']);
+
+    // Orders Management - Admin & Cashier & Kitchen
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index')->middleware(['admin', 'role:admin,cashier,kitchen']);
+    Route::get('/orders/{id}/edit', [OrderController::class, 'edit'])->name('orders.edit')->middleware(['admin', 'role:admin,cashier,kitchen']);
+    Route::put('/orders/{id}', [OrderController::class, 'update'])->name('orders.update')->middleware(['admin', 'role:admin,cashier,kitchen']);
+    Route::delete('/orders/{id}', [OrderController::class, 'destroy'])->name('orders.destroy')->middleware(['admin', 'role:admin']);
     
-    // Dashboard (Protected)
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard')->middleware('admin');
+    // Cashier Features - Admin & Cashier
+    Route::get('/orders/{id}/payment', [OrderController::class, 'updatePayment'])->name('orders.payment')->middleware(['admin', 'role:admin,cashier']);
+    Route::post('/orders/{id}/payment', [OrderController::class, 'updatePaymentStatus'])->middleware(['admin', 'role:admin,cashier']);
+    Route::get('/orders/{id}/receipt', [OrderController::class, 'printReceipt'])->name('orders.receipt')->middleware(['admin', 'role:admin,cashier,kitchen']);
+    Route::get('/walkthrough', [OrderController::class, 'walkthroughCreate'])->name('orders.walkthrough.create')->middleware(['admin', 'role:admin,cashier']);
+    Route::post('/walkthrough', [OrderController::class, 'walkthroughStore'])->name('orders.walkthrough.store')->middleware(['admin', 'role:admin,cashier']);
+
+    // Kitchen View - Admin & Kitchen
+    Route::get('/kitchen', [OrderController::class, 'kitchen'])->name('kitchen')->middleware(['admin', 'role:admin,kitchen']);
     
-    // Product Management (Protected)
-    Route::resource('products', ProductController::class)->middleware('admin');
-    
-    // Orders (Protected)
-    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index')->middleware('admin');
-    Route::get('/orders/{id}/edit', [OrderController::class, 'edit'])->name('orders.edit')->middleware('admin');
-    Route::put('/orders/{id}', [OrderController::class, 'update'])->name('orders.update')->middleware('admin');
-    Route::delete('/orders/{id}', [OrderController::class, 'destroy'])->name('orders.destroy')->middleware('admin');
-    
-    // Kitchen View (Protected)
-    Route::get('/kitchen', [OrderController::class, 'kitchen'])->name('kitchen')->middleware('admin');
+    // Order History - All roles
+    Route::get('/history', [OrderController::class, 'history'])->name('history')->middleware(['admin', 'role:admin,kitchen,cashier']);
 });

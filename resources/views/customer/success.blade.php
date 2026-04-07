@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pesanan Berhasil - NgopiGo</title>
-        <link rel="icon" href="{{ asset('images/logo.jpeg') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('images/logo.jpeg') }}" type="image/x-icon">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-amber-50 min-h-screen flex items-center justify-center p-4">
@@ -21,13 +21,16 @@
 
         <!-- Order Info -->
         <div class="bg-amber-50 rounded-xl p-6 mb-6">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <div class="col-span-2 md:col-span-4 text-center">
-                    <p class="text-sm text-gray-600 mb-1">Nomor Pesanan</p>
-                    <p class="text-3xl font-bold text-amber-600">{{ $order->order_number }}</p>
+            <!-- Queue Number & Order Number -->
+            <div class="text-center mb-6 pb-6 border-b-2 border-amber-200">
+                <p class="text-sm text-gray-600 mb-1">Nomor Antrian</p>
+                <p class="text-5xl font-bold text-amber-600 mb-2">#{{ $order->getFormattedQueueNumber() }}</p>
+                <div class="flex items-center justify-center gap-2">
+                    <span class="text-sm text-gray-600">No. Pesanan:</span>
+                    <span class="text-lg font-bold text-amber-600">{{ $order->getFormattedOrderNumber() }}</span>
                 </div>
             </div>
-            
+
             <div class="grid grid-cols-2 gap-4 mb-4">
                 <div>
                     <p class="text-sm text-gray-600">Meja</p>
@@ -98,12 +101,15 @@
                 <div class="space-y-2">
                     @foreach($order->orderItems as $item)
                     <div class="flex justify-between items-center text-sm">
-                        <span class="text-gray-700">{{ $item->quantity }}x {{ $item->product->name }}</span>
+                        <div>
+                            <span class="text-xs text-gray-500 font-mono">{{ $order->getProductCode($item) }}</span>
+                            <span class="text-gray-700 ml-2">{{ $item->quantity }}x {{ $item->product->name }}</span>
+                        </div>
                         <span class="text-gray-800 font-medium">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</span>
                     </div>
                     @endforeach
                 </div>
-                
+
                 <div class="flex justify-between items-center mt-4 pt-4 border-t-2 border-amber-200">
                     <span class="text-lg font-bold text-gray-800">Total Bayar</span>
                     <span class="text-2xl font-bold text-amber-600">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
@@ -130,11 +136,11 @@
         </div>
 
         <div class="flex gap-3">
-            <a href="{{ route('order.create', $order->table_number) }}" 
+            <a href="{{ route('order.create', $order->table_number) }}"
                class="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-200 text-center">
                 🛒 Pesan Lagi
             </a>
-            <a href="{{ route('order.success', $order->order_number) }}" 
+            <a href="{{ route('order.success', $order->order_number) }}"
                class="px-6 py-3 border-2 border-amber-300 text-amber-700 font-semibold rounded-xl hover:bg-amber-50 transition text-center">
                 🔄 Refresh
             </a>
