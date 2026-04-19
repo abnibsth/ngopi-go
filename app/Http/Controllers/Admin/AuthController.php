@@ -18,6 +18,7 @@ class AuthController extends Controller
 
     /**
      * Handle login request.
+     * Single Login logic for all staff (admin, kitchen, cashier)
      */
     public function login(Request $request)
     {
@@ -39,24 +40,31 @@ class AuthController extends Controller
                 ]);
             }
 
-            // Redirect berdasarkan role
+            // Redirect based on role
             $admin = Auth::guard('admin')->user();
-            
-            if ($admin->isAdmin()) {
-                return redirect()->intended(route('admin.dashboard'));
-            } elseif ($admin->isCashier()) {
-                return redirect()->intended(route('admin.orders.index'));
-            } elseif ($admin->isKitchen()) {
-                return redirect()->intended(route('admin.kitchen'));
-            }
-            
-            // Default fallback
-            return redirect()->intended(route('admin.history'));
+
+            return $this->redirectBasedOnRole($admin);
         }
 
         return back()->withErrors([
             'username' => 'Username atau password salah.',
         ])->onlyInput('username');
+    }
+
+    /**
+     * Redirect based on role
+     */
+    private function redirectBasedOnRole($admin): \Illuminate\Http\RedirectResponse
+    {
+        if ($admin->isAdmin()) {
+            return redirect()->intended(route('admin.dashboard'));
+        } elseif ($admin->isCashier()) {
+            return redirect()->intended(route('admin.orders.index'));
+        } elseif ($admin->isKitchen()) {
+            return redirect()->intended(route('admin.kitchen'));
+        }
+
+        return redirect()->intended(route('admin.history'));
     }
 
     /**

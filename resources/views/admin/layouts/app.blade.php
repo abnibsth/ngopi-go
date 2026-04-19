@@ -58,15 +58,26 @@
                 <!-- Logo & Title -->
                 <div class="flex items-center gap-4">
                     <img src="{{ asset('images/logo.jpeg') }}" alt="NgopiGo" class="w-12 h-12 rounded-full border-2 border-[#C69C6D]">
+                    @php
+                        $currentUser = auth()->guard('admin')->user();
+                    @endphp
                     <div>
-                        <h1 class="text-2xl font-bold gradient-gold">NgopiGo Admin</h1>
+                        <h1 class="text-2xl font-bold gradient-gold">
+                            @if($currentUser && $currentUser->isKitchen())
+                                NgopiGo Dapur
+                            @elseif($currentUser && $currentUser->isCashier())
+                                NgopiGo Kasir
+                            @else
+                                NgopiGo Admin
+                            @endif
+                        </h1>
                         <p class="text-[#C69C6D] text-xs">
-                            @if(auth()->guard('admin')->user()->role === 'admin')
-                                👑 Administrator
-                            @elseif(auth()->guard('admin')->user()->role === 'kitchen')
+                            @if($currentUser && $currentUser->isKitchen())
                                 🍳 Dapur
-                            @elseif(auth()->guard('admin')->user()->role === 'cashier')
+                            @elseif($currentUser && $currentUser->isCashier())
                                 💵 Kasir
+                            @else
+                                👑 Administrator
                             @endif
                         </p>
                     </div>
@@ -74,36 +85,36 @@
 
                 <!-- Navigation -->
                 <nav class="hidden md:flex items-center gap-6">
-                    @if(auth()->guard('admin')->user()->canManageDashboard())
-                    <a href="{{ route('admin.dashboard') }}" 
+                    @if($currentUser && $currentUser->isAdmin())
+                    <a href="{{ route('admin.dashboard') }}"
                        class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }} text-white hover:text-[#C69C6D] transition font-medium">
                         📊 Dashboard
                     </a>
                     @endif
 
-                    @if(auth()->guard('admin')->user()->canManageOrders())
-                    <a href="{{ route('admin.orders.index') }}" 
-                       class="nav-link {{ request()->routeIs('admin.orders.*') && !request()->routeIs('admin.history') ? 'active' : '' }} text-white hover:text-[#C69C6D] transition font-medium">
+                    @if($currentUser && ($currentUser->isAdmin() || $currentUser->isCashier()))
+                    <a href="{{ route('admin.orders.index') }}"
+                       class="nav-link {{ request()->routeIs('admin.orders.*') && !request()->routeIs('admin.history') && !request()->routeIs('*.walkthrough*') ? 'active' : '' }} text-white hover:text-[#C69C6D] transition font-medium">
                         📝 Pesanan
                     </a>
                     @endif
 
-                    @if(auth()->guard('admin')->user()->canManageKitchen())
-                    <a href="{{ route('admin.kitchen') }}" 
+                    @if($currentUser && ($currentUser->isAdmin() || $currentUser->isKitchen()))
+                    <a href="{{ route('admin.kitchen') }}"
                        class="nav-link {{ request()->routeIs('admin.kitchen') ? 'active' : '' }} text-white hover:text-[#C69C6D] transition font-medium">
                         🍳 Dapur
                     </a>
                     @endif
 
-                    @if(auth()->guard('admin')->user()->canManageDashboard())
-                    <a href="{{ route('admin.products.index') }}" 
+                    @if($currentUser && $currentUser->isAdmin())
+                    <a href="{{ route('admin.products.index') }}"
                        class="nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }} text-white hover:text-[#C69C6D] transition font-medium">
                         📦 Produk
                     </a>
                     @endif
 
-                    @if(auth()->guard('admin')->user()->canViewOrderHistory())
-                    <a href="{{ route('admin.history') }}" 
+                    @if($currentUser && ($currentUser->isAdmin() || $currentUser->isCashier()))
+                    <a href="{{ route('admin.history') }}"
                        class="nav-link {{ request()->routeIs('admin.history') ? 'active' : '' }} text-white hover:text-[#C69C6D] transition font-medium">
                         📜 Riwayat
                     </a>
@@ -114,16 +125,20 @@
                 <div class="flex items-center gap-3">
                     <div class="text-right hidden lg:block">
                         <p class="text-xs text-[#C69C6D]">Halo,</p>
-                        <p class="text-sm font-semibold text-white">{{ auth()->guard('admin')->user()->name }}</p>
+                        <p class="text-sm font-semibold text-white">
+                            @if($currentUser)
+                                {{ $currentUser->name }}
+                            @endif
+                        </p>
                     </div>
                     <form action="{{ route('admin.logout') }}" method="POST" class="inline">
                         @csrf
-                        <button type="submit" 
+                        <button type="submit"
                                 class="bg-[#C69C6D] hover:bg-[#D4AF7A] text-[#121212] font-semibold py-2 px-4 rounded-lg transition shadow-lg hover:shadow-[#C69C6D]/50 text-sm">
                             🚪 Logout
                         </button>
                     </form>
-                    <a href="{{ route('order.create') }}" 
+                    <a href="{{ route('order.create') }}"
                        class="bg-[#C69C6D]/20 hover:bg-[#C69C6D]/40 border border-[#C69C6D]/50 text-[#F5F0E6] font-semibold py-2 px-4 rounded-lg transition backdrop-blur-sm text-sm">
                         🛒 Website
                     </a>
@@ -133,36 +148,36 @@
             <!-- Mobile Navigation -->
             <div class="md:hidden mt-4 pt-4 border-t border-[#C69C6D]/20">
                 <div class="flex gap-2 overflow-x-auto pb-2">
-                    @if(auth()->guard('admin')->user()->canManageDashboard())
-                    <a href="{{ route('admin.dashboard') }}" 
+                    @if($currentUser && $currentUser->isAdmin())
+                    <a href="{{ route('admin.dashboard') }}"
                        class="whitespace-nowrap px-4 py-2 bg-[#C69C6D]/20 rounded-lg text-sm font-medium hover:bg-[#C69C6D]/30 transition {{ request()->routeIs('admin.dashboard') ? 'bg-[#C69C6D]/40 text-[#C69C6D]' : 'text-white' }}">
                         📊 Dashboard
                     </a>
                     @endif
 
-                    @if(auth()->guard('admin')->user()->canManageOrders())
-                    <a href="{{ route('admin.orders.index') }}" 
-                       class="whitespace-nowrap px-4 py-2 bg-[#C69C6D]/20 rounded-lg text-sm font-medium hover:bg-[#C69C6D]/30 transition {{ request()->routeIs('admin.orders.*') && !request()->routeIs('admin.history') ? 'bg-[#C69C6D]/40 text-[#C69C6D]' : 'text-white' }}">
+                    @if($currentUser && ($currentUser->isAdmin() || $currentUser->isCashier()))
+                    <a href="{{ route('admin.orders.index') }}"
+                       class="whitespace-nowrap px-4 py-2 bg-[#C69C6D]/20 rounded-lg text-sm font-medium hover:bg-[#C69C6D]/30 transition {{ request()->routeIs('admin.orders.*') && !request()->routeIs('admin.history') && !request()->routeIs('*.walkthrough*') ? 'bg-[#C69C6D]/40 text-[#C69C6D]' : 'text-white' }}">
                         📝 Pesanan
                     </a>
                     @endif
 
-                    @if(auth()->guard('admin')->user()->canManageKitchen())
-                    <a href="{{ route('admin.kitchen') }}" 
+                    @if($currentUser && ($currentUser->isAdmin() || $currentUser->isKitchen()))
+                    <a href="{{ route('admin.kitchen') }}"
                        class="whitespace-nowrap px-4 py-2 bg-[#C69C6D]/20 rounded-lg text-sm font-medium hover:bg-[#C69C6D]/30 transition {{ request()->routeIs('admin.kitchen') ? 'bg-[#C69C6D]/40 text-[#C69C6D]' : 'text-white' }}">
                         🍳 Dapur
                     </a>
                     @endif
 
-                    @if(auth()->guard('admin')->user()->canManageDashboard())
-                    <a href="{{ route('admin.products.index') }}" 
+                    @if($currentUser && $currentUser->isAdmin())
+                    <a href="{{ route('admin.products.index') }}"
                        class="whitespace-nowrap px-4 py-2 bg-[#C69C6D]/20 rounded-lg text-sm font-medium hover:bg-[#C69C6D]/30 transition {{ request()->routeIs('admin.products.*') ? 'bg-[#C69C6D]/40 text-[#C69C6D]' : 'text-white' }}">
                         📦 Produk
                     </a>
                     @endif
 
-                    @if(auth()->guard('admin')->user()->canViewOrderHistory())
-                    <a href="{{ route('admin.history') }}" 
+                    @if($currentUser && ($currentUser->isAdmin() || $currentUser->isCashier()))
+                    <a href="{{ route('admin.history') }}"
                        class="whitespace-nowrap px-4 py-2 bg-[#C69C6D]/20 rounded-lg text-sm font-medium hover:bg-[#C69C6D]/30 transition {{ request()->routeIs('admin.history') ? 'bg-[#C69C6D]/40 text-[#C69C6D]' : 'text-white' }}">
                         📜 Riwayat
                     </a>

@@ -85,6 +85,9 @@
         <div class="receipt-container">
             <!-- Header -->
             <div class="text-center mb-3 pb-3 border-b-2">
+                <div class="flex justify-center mb-2">
+                    <img src="{{ asset('images/logo.jpeg') }}" alt="NgopiGo Logo" style="width: 60px; height: 60px; filter: grayscale(100%); object-fit: cover; border-radius: 50%;">
+                </div>
                 <h1 class="text-xl font-bold">NGOPIGO</h1>
                 <p class="text-xs">Coffee & Chill</p>
                 <p class="text-xs mt-1">{{ $order->created_at->format('d/m/Y H:i') }}</p>
@@ -141,9 +144,6 @@
                             <td class="py-2">
                                 <div class="font-bold">{{ $order->getProductCode($item) }}</div>
                                 <div>{{ $item->product->name }}</div>
-                                @if($item->notes)
-                                <div class="text-xs" style="font-size: 9px;">Note: {{ $item->notes }}</div>
-                                @endif
                             </td>
                             <td class="text-center">{{ $item->quantity }}x</td>
                             <td class="text-right font-bold">
@@ -156,6 +156,12 @@
                         @endforeach
                     </tbody>
                 </table>
+                
+                @if($order->notes)
+                <div class="mt-2 pt-2 border-t text-xs">
+                    <span class="font-bold">Catatan:</span> {{ $order->notes }}
+                </div>
+                @endif
             </div>
 
             <!-- Payment Summary -->

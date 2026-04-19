@@ -18,28 +18,30 @@ class DashboardController extends Controller
     {
         // Statistik Utama
         $totalOrders = Order::count();
-        $totalRevenue = Order::where('status', 'completed')->sum('total_amount');
+        $totalRevenue = Order::where('payment_status', 'paid')->sum('total_amount');
         $pendingOrders = Order::whereIn('status', ['pending', 'preparing', 'ready'])->count();
         $totalProducts = Product::count();
         $activeProducts = Product::where('is_available', true)->count();
 
         // Statistik Hari Ini
-        $todayOrders = Order::whereDate('created_at', today())->count();
-        $todayRevenue = Order::whereDate('created_at', today())
-            ->where('status', 'completed')
-            ->sum('total_amount');
         $todayOrdersCount = Order::whereDate('created_at', today())->count();
+        $todayRevenue = Order::whereDate('created_at', today())
+            ->where(function ($q) {
+                $q->where('payment_status', 'paid');
+            })
+            ->sum('total_amount');
+        $todayOrders = $todayOrdersCount;
 
         // Statistik Minggu Ini
         $weekRevenue = Order::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
-            ->where('status', 'completed')
+            ->where('payment_status', 'paid')
             ->sum('total_amount');
         $weekOrders = Order::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count();
 
         // Statistik Bulan Ini
         $monthRevenue = Order::whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
-            ->where('status', 'completed')
+            ->where('payment_status', 'paid')
             ->sum('total_amount');
         $monthOrders = Order::whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
@@ -59,10 +61,10 @@ class DashboardController extends Controller
         for ($i = 6; $i >= 0; $i--) {
             $date = now()->subDays($i);
             $revenue = Order::whereDate('created_at', $date->format('Y-m-d'))
-                ->where('status', 'completed')
+                ->where('payment_status', 'paid')
                 ->sum('total_amount');
             $orders = Order::whereDate('created_at', $date->format('Y-m-d'))->count();
-            
+
             $salesChart[] = [
                 'date' => $date->format('d M'),
                 'revenue' => $revenue,

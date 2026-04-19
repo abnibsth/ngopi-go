@@ -46,6 +46,19 @@ return [
         'admin' => [
             'driver' => 'session',
             'provider' => 'admins',
+            'cookie' => 'ngopigo_admin_session',
+        ],
+
+        'kitchen' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+            'cookie' => 'ngopigo_kitchen_session',
+        ],
+
+        'cashier' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+            'cookie' => 'ngopigo_cashier_session',
         ],
     ],
 

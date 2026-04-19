@@ -6,6 +6,38 @@
     <title>Pesanan Berhasil - NgopiGo</title>
     <link rel="icon" href="{{ asset('images/logo.jpeg') }}" type="image/x-icon">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- QRCode.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <style>
+        @@keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+            50% { box-shadow: 0 0 0 12px rgba(245, 158, 11, 0); }
+        }
+        .qr-pulse {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        @@keyframes scan-line {
+            0% { top: 0; }
+            50% { top: calc(100% - 3px); }
+            100% { top: 0; }
+        }
+        .scan-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #f59e0b, transparent);
+            animation: scan-line 2s ease-in-out infinite;
+            box-shadow: 0 0 8px rgba(245, 158, 11, 0.8);
+        }
+        @@keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+    </style>
 </head>
 <body class="bg-amber-50 min-h-screen flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-xl p-8 max-w-2xl w-full">
@@ -124,16 +156,82 @@
         </div>
         @endif
 
+        {{-- QR Code Section untuk COD yang belum dibayar --}}
+        @if($order->payment_method === 'cod' && $order->payment_status !== 'paid')
+        <div class="fade-in" style="animation-delay: 0.3s; opacity: 0;">
+            <div class="bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-300 rounded-2xl p-6 mb-6">
+                <div class="text-center mb-4">
+                    <div class="inline-flex items-center gap-2 bg-amber-100 text-amber-800 text-xs font-semibold px-3 py-1 rounded-full mb-3">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                        </svg>
+                        Bayar di Kasir
+                    </div>
+                    <h2 class="text-lg font-bold text-amber-900 mb-1">Scan QR Code Ini ke Kasir</h2>
+                    <p class="text-sm text-amber-700">Tunjukkan QR code ini ke kasir untuk memproses pembayaran tunai Anda</p>
+                </div>
+
+                <!-- QR Code Box -->
+                <div class="flex justify-center mb-4">
+                    <div class="relative">
+                        <!-- Corner decorations -->
+                        <div class="absolute -top-2 -left-2 w-6 h-6 border-t-4 border-l-4 border-amber-500 rounded-tl-lg"></div>
+                        <div class="absolute -top-2 -right-2 w-6 h-6 border-t-4 border-r-4 border-amber-500 rounded-tr-lg"></div>
+                        <div class="absolute -bottom-2 -left-2 w-6 h-6 border-b-4 border-l-4 border-amber-500 rounded-bl-lg"></div>
+                        <div class="absolute -bottom-2 -right-2 w-6 h-6 border-b-4 border-r-4 border-amber-500 rounded-br-lg"></div>
+
+                        <div class="bg-white rounded-xl p-4 shadow-lg qr-pulse relative overflow-hidden">
+                            <div class="scan-line" id="qr-scan-line"></div>
+                            <div id="qrcode"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order detail ringkas -->
+                <div class="bg-white/70 rounded-xl p-4 border border-amber-200">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs text-amber-700">No. Pesanan</span>
+                        <span class="text-xs font-bold text-amber-900 font-mono">{{ $order->getFormattedOrderNumber() }}</span>
+                    </div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs text-amber-700">Meja</span>
+                        <span class="text-xs font-bold text-amber-900">🪑 {{ $order->table_number }}</span>
+                    </div>
+                    <div class="flex justify-between items-center pt-2 border-t border-amber-200">
+                        <span class="text-sm font-bold text-amber-900">Total Bayar</span>
+                        <span class="text-lg font-bold text-amber-600">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
+                    </div>
+                </div>
+
+                <p class="text-center text-xs text-amber-600 mt-3">
+                    💡 QR code ini unik untuk pesanan Anda. Kasir akan memindai dan mengkonfirmasi pembayaran.
+                </p>
+            </div>
+        </div>
+
+        @elseif($order->payment_method === 'cod' && $order->payment_status === 'paid')
+        <div class="bg-green-50 border-2 border-green-300 rounded-2xl p-5 mb-6 text-center fade-in" style="opacity: 0;">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <h2 class="text-lg font-bold text-green-800">✅ Pembayaran Lunas!</h2>
+            <p class="text-sm text-green-700 mt-1">Pesanan Anda telah dibayar. Silahkan tunggu pesanan disiapkan.</p>
+        </div>
+
+        @else
         <div class="text-center mb-6">
             <p class="text-sm text-gray-600">
                 Pesanan Anda sedang disiapkan. Silahkan tunggu di meja <strong>{{ $order->table_number }}</strong>
             </p>
             @if($order->payment_method === 'online')
             <p class="text-xs text-orange-600 mt-2">
-                ⚠️ Untuk pembayaran online, silahkan transfer ke rekening yang akan ditampilkan ke kasir.
+                ⚠️ Untuk pembayaran online, silahkan tunggu konfirmasi sistem.
             </p>
             @endif
         </div>
+        @endif
 
         <div class="flex gap-3">
             <a href="{{ route('order.create', $order->table_number) }}"
@@ -146,5 +244,37 @@
             </a>
         </div>
     </div>
+
+    @if($order->payment_method === 'cod' && $order->payment_status !== 'paid')
+    <script>
+        // Generate QR Code yang mengarah ke halaman konfirmasi kasir
+        const cashierScanUrl = '{{ route("cashier.scan", $order->order_number) }}';
+        const qrContainer = document.getElementById('qrcode');
+
+        if (qrContainer) {
+            new QRCode(qrContainer, {
+                text: cashierScanUrl,
+                width: 200,
+                height: 200,
+                colorDark: '#1c0a00',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+
+        // Auto-refresh setiap 10 detik untuk cek status pembayaran
+        let refreshInterval = setInterval(function() {
+            fetch('{{ route("order.check-payment", $order->order_number) }}')
+                .then(r => r.json())
+                .then(data => {
+                    if (data.paid) {
+                        clearInterval(refreshInterval);
+                        window.location.reload();
+                    }
+                })
+                .catch(() => {});
+        }, 10000);
+    </script>
+    @endif
 </body>
 </html>

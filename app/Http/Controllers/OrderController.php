@@ -227,10 +227,16 @@ class OrderController extends Controller
         // Update status order berdasarkan status pembayaran
         if ($transactionStatus == 'capture') {
             if ($fraudStatus == 'accept') {
-                $order->update(['status' => 'preparing']);
+                $order->update([
+                    'status' => 'preparing',
+                    'payment_status' => 'paid'
+                ]);
             }
         } else if ($transactionStatus == 'settlement') {
-            $order->update(['status' => 'preparing']);
+            $order->update([
+                'status' => 'preparing',
+                'payment_status' => 'paid'
+            ]);
         } else if ($transactionStatus == 'pending') {
             $order->update(['status' => 'pending']);
         } else if ($transactionStatus == 'deny' || $transactionStatus == 'expire' || $transactionStatus == 'cancel') {
@@ -282,11 +288,15 @@ class OrderController extends Controller
     public function kitchen()
     {
         $orders = Order::with('orderItems.product')
+            ->where('payment_status', 'paid')
             ->whereIn('status', ['pending', 'preparing', 'ready'])
             ->latest()
             ->get();
 
-        return view('admin.kitchen', compact('orders'));
+        // Hitung semua pesanan yang sudah selesai (total)
+        $completedToday = Order::where('status', 'completed')->count();
+
+        return view('admin.kitchen', compact('orders', 'completedToday'));
     }
 
     /**
@@ -337,6 +347,56 @@ class OrderController extends Controller
     {
         $order = Order::with('orderItems.product')->findOrFail($id);
         return view('admin.orders.receipt', compact('order'));
+    }
+
+    /**
+     * Halaman konfirmasi pembayaran kasir setelah scan QR code pelanggan.
+     */
+    public function cashierScan($orderNumber)
+    {
+        $order = Order::with('orderItems.product')->where('order_number', $orderNumber)->firstOrFail();
+        return view('admin.orders.scan-pay', compact('order'));
+    }
+
+    /**
+     * Konfirmasi pembayaran tunai oleh kasir setelah scan QR.
+     */
+    public function cashierConfirmPayment($orderNumber)
+    {
+        $order = Order::where('order_number', $orderNumber)->firstOrFail();
+
+        if ($order->payment_status === 'paid') {
+            return redirect()->route('admin.orders.index')
+                ->with('success', 'Pesanan ' . $order->getFormattedOrderNumber() . ' sudah ditandai lunas sebelumnya.');
+        }
+
+        $order->update([
+            'payment_status' => 'paid',
+            'status'         => 'preparing',
+        ]);
+
+        \Log::info('Cashier confirmed payment via QR scan: ' . $orderNumber);
+
+        return redirect()->route('admin.orders.index')
+            ->with('success', '✅ Pembayaran pesanan ' . $order->getFormattedOrderNumber() . ' berhasil dikonfirmasi lunas!');
+    }
+
+    /**
+     * Cek status pembayaran order (AJAX polling dari halaman pelanggan).
+     */
+    public function checkPaymentStatus($orderNumber)
+    {
+        $order = Order::where('order_number', $orderNumber)->first();
+
+        if (!$order) {
+            return response()->json(['paid' => false, 'error' => 'Order not found'], 404);
+        }
+
+        return response()->json([
+            'paid'           => $order->payment_status === 'paid',
+            'payment_status' => $order->payment_status,
+            'status'         => $order->status,
+        ]);
     }
 
     /**

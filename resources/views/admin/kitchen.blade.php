@@ -66,7 +66,7 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-[#C69C6D] text-sm mb-1">Selesai</p>
-                <p class="text-3xl font-bold text-[#F5F0E6]">{{ $orders->where('status', 'completed')->count() }}</p>
+                <p class="text-3xl font-bold text-[#F5F0E6]">{{ $completedToday ?? 0 }}</p>
             </div>
             <div class="text-5xl opacity-50">✓</div>
         </div>
@@ -117,11 +117,15 @@
                         <span class="bg-[#C69C6D]/20 text-[#C69C6D] px-2 py-1 rounded text-xs font-bold">{{ $item->quantity }}x</span>
                         <span>{{ $item->product->name }}</span>
                     </div>
-                    @if($item->notes)
-                    <span class="text-[#C69C6D] text-xs" title="{{ $item->notes }}">📝</span>
-                    @endif
                 </div>
                 @endforeach
+
+                @if($order->notes)
+                <div class="mt-4 p-3 bg-yellow-900/30 border border-yellow-700/50 rounded-lg">
+                    <p class="text-xs text-yellow-500 font-semibold mb-1">📝 Catatan Pelanggan:</p>
+                    <p class="text-sm text-yellow-100 italic break-words">"{{ $order->notes }}"</p>
+                </div>
+                @endif
             </div>
 
             <div class="flex items-center justify-between pt-4 border-t border-[#C69C6D]/20">

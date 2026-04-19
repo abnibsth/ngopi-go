@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Admin - NgopiGo</title>
+    <title>Login Pegawai - NgopiGo</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         /* Custom Premium Colors - Same as Landing Page */
@@ -38,8 +38,8 @@
     <div class="bg-[#1a120f] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-[#C69C6D]/30 premium-card">
         <!-- Header -->
         <div class="bg-gradient-to-r from-[#2E1F1A] to-[#1a120f] px-8 py-6 text-center border-b border-[#C69C6D]/30">
-            <div class="text-5xl mb-3">🔐</div>
-            <h1 class="text-2xl font-bold gradient-gold">Admin NgopiGo</h1>
+            <div class="text-5xl mb-3">☕</div>
+            <h1 class="text-2xl font-bold gradient-gold">Login Pegawai NgopiGo</h1>
             <p class="text-[#C69C6D] mt-1">Silahkan login untuk melanjutkan</p>
         </div>
 
