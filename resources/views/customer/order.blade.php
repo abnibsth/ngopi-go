@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -140,13 +140,28 @@
             }
         }
 
+        /* Ensure product cards maintain square shape */
+        .product-card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .product-card .aspect-square {
+            flex-shrink: 0;
+        }
+
+        .product-card > div:last-child {
+            flex: 1;
+        }
+
         /* Product Image Zoom Animation */
         .product-image {
             transition: transform 0.5s ease;
         }
 
         .premium-card:hover .product-image {
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
 
         /* Ripple Effect on Click */
@@ -368,6 +383,40 @@
         .glow-pulse {
             animation: glowPulse 4s ease-in-out infinite;
         }
+
+        /* Hide scrollbar for category filter */
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Category section transition */
+        .category-section {
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .category-section.hidden {
+            display: none;
+        }
+
+        .category-section.active {
+            animation: categoryFadeIn 0.5s ease-out;
+        }
+
+        @keyframes categoryFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body class="bg-premium-black text-cream min-h-screen">
@@ -460,10 +509,10 @@
     </section>
 
     <!-- Menu Section -->
-    <section id="menu" class="py-20 bg-gradient-to-b from-premium-black to-premium-brown">
+    <section id="menu" class="py-12 md:py-16 lg:py-20 bg-gradient-to-b from-premium-black to-premium-brown">
         <div class="container mx-auto px-4">
             <!-- Section Header -->
-            <div class="text-center mb-8 md:mb-16">
+            <div class="text-center mb-6 md:mb-10">
                 <span class="text-premium-gold text-xs sm:text-sm font-medium tracking-wider uppercase">Our Premium Selection</span>
                 <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mt-4 mb-4 md:mb-6">
                     <span class="gradient-gold">Menu Favorit</span>
@@ -473,16 +522,49 @@
                 </p>
             </div>
 
+            <!-- Category Filter Buttons - Sticky -->
+            <div class="sticky top-4 z-40 mb-8 md:mb-12">
+                <div class="bg-premium-black/80 backdrop-blur-md rounded-full p-2 border border-premium-gold/20 shadow-xl">
+                    <div class="flex gap-2 overflow-x-auto scrollbar-hide" id="categoryFilter">
+                        <button type="button" 
+                                data-category="all" 
+                                class="category-btn flex-shrink-0 px-4 sm:px-6 py-2 sm:py-3 rounded-full text-sm sm:text-base font-bold transition-all duration-300 bg-premium-gold text-premium-black border border-premium-gold">
+                            🍽️ Semua Menu
+                        </button>
+                        <button type="button" 
+                                data-category="coffee" 
+                                class="category-btn flex-shrink-0 px-4 sm:px-6 py-2 sm:py-3 rounded-full text-sm sm:text-base font-bold transition-all duration-300 bg-premium-black/50 text-premium-gold border border-premium-gold/30 hover:border-premium-gold">
+                            ☕ Coffee
+                        </button>
+                        <button type="button" 
+                                data-category="non-coffee" 
+                                class="category-btn flex-shrink-0 px-4 sm:px-6 py-2 sm:py-3 rounded-full text-sm sm:text-base font-bold transition-all duration-300 bg-premium-black/50 text-premium-gold border border-premium-gold/30 hover:border-premium-gold">
+                            🍵 Non Coffee
+                        </button>
+                        <button type="button" 
+                                data-category="food" 
+                                class="category-btn flex-shrink-0 px-4 sm:px-6 py-2 sm:py-3 rounded-full text-sm sm:text-base font-bold transition-all duration-300 bg-premium-black/50 text-premium-gold border border-premium-gold/30 hover:border-premium-gold">
+                            🍛 Food
+                        </button>
+                        <button type="button" 
+                                data-category="snack" 
+                                class="category-btn flex-shrink-0 px-4 sm:px-6 py-2 sm:py-3 rounded-full text-sm sm:text-base font-bold transition-all duration-300 bg-premium-black/50 text-premium-gold border border-premium-gold/30 hover:border-premium-gold">
+                            🍟 Snacks
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Main Content -->
-            <main class="container mx-auto px-4 py-8">
+            <main class="container mx-auto px-4 pb-32">
                 <form action="{{ route('order.store') }}" method="POST" id="orderForm">
                     @csrf
                     <input type="hidden" name="table_number" value="{{ $tableNumber }}">
-                    
+
                     <!-- Menu Categories -->
                     @foreach(['coffee' => ['icon' => '☕', 'name' => 'Signature Coffee'], 'non-coffee' => ['icon' => '🍵', 'name' => 'Non Coffee'], 'food' => ['icon' => '🍛', 'name' => 'Premium Food'], 'snack' => ['icon' => '🍟', 'name' => 'Snacks & Bites']] as $categoryKey => $categoryData)
                         @if(isset($products[$categoryKey]) && $products[$categoryKey]->count() > 0)
-                        <div class="mb-12 md:mb-16 reveal">
+                        <div class="mb-12 md:mb-16 reveal category-section" data-category="{{ $categoryKey }}">
                             <!-- Category Header -->
                             <div class="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
                                 <div class="text-3xl sm:text-4xl">{{ $categoryData['icon'] }}</div>
@@ -492,47 +574,49 @@
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                            <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 auto-rows-fr">
                                 @foreach($products[$categoryKey] as $product)
-                                <div class="product-card premium-card gold-border-animate bg-premium-brown/50 rounded-2xl overflow-hidden border border-premium-gold/20 cursor-pointer relative"
+                                <div class="product-card premium-card gold-border-animate bg-premium-brown/50 rounded-2xl overflow-hidden border border-premium-gold/20 cursor-pointer relative group flex flex-col h-full"
                                      data-product-id="{{ $product->id }}"
                                      data-product-name="{{ $product->name }}"
-                                     data-product-price="{{ $product->price }}">
-                                    <!-- Product Image -->
+                                     data-product-price="{{ $product->price }}"
+                                     data-category="{{ $categoryKey }}">
+                                    <!-- Product Image Container - Fixed Square -->
                                     @if($product->image)
-                                    <div class="relative h-36 sm:h-48 overflow-hidden bg-gradient-to-br from-premium-brown/30 to-premium-black/30">
+                                    <div class="relative w-full aspect-square bg-gradient-to-br from-[#2E1F1A] to-[#1a120f] overflow-hidden">
                                         <img src="{{ asset('storage/' . $product->image) }}"
                                              alt="{{ $product->name }}"
-                                             class="w-full h-full object-cover product-image transform hover:scale-110 transition-transform duration-500">
+                                             class="absolute inset-0 w-full h-full object-cover product-image transform group-hover:scale-105 transition-transform duration-500">
+                                        <!-- Subtle shine effect -->
+                                        <div class="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-white/10 pointer-events-none"></div>
                                     </div>
                                     @else
-                                    <div class="h-36 sm:h-48 bg-gradient-to-br from-premium-brown to-premium-black flex items-center justify-center product-image">
-                                        <span class="text-4xl sm:text-6xl opacity-50">📷</span>
+                                    <div class="w-full aspect-square bg-gradient-to-br from-[#2E1F1A] to-[#1a120f] flex items-center justify-center product-image">
+                                        <span class="text-5xl sm:text-6xl opacity-50">📷</span>
                                     </div>
                                     @endif
 
                                     <!-- Product Content -->
-                                    <div class="p-4 sm:p-6">
-                                        <div class="flex items-start justify-between mb-2 sm:mb-3">
-                                            <div class="flex-1">
-                                                <h4 class="text-lg sm:text-xl font-bold text-white mb-1 sm:mb-2">{{ $product->name }}</h4>
-                                                <p class="text-xs sm:text-sm text-white line-clamp-2 font-medium">{{ $product->description }}</p>
+                                    <div class="p-3 sm:p-4 flex-1 flex flex-col justify-between">
+                                        <div class="flex items-start justify-between mb-2">
+                                            <div class="flex-1 min-w-0">
+                                                <h4 class="text-sm sm:text-base md:text-lg font-bold text-white mb-1 line-clamp-2 leading-tight">{{ $product->name }}</h4>
+                                                <p class="text-[10px] sm:text-xs text-white/80 line-clamp-2 font-medium hidden sm:block">{{ $product->description }}</p>
                                             </div>
                                         </div>
 
-                                        <div class="relative flex items-center justify-between mt-3 sm:mt-4 pt-3 sm:pt-4">
-                                            <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#C69C6D]/40 to-transparent"></div>
-                                            <span class="text-lg sm:text-2xl font-bold gradient-gold">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
-                                            <div class="flex items-center gap-2">
+                                        <div class="relative flex items-center justify-between mt-3 pt-3 border-t border-premium-gold/20">
+                                            <span class="text-sm sm:text-base md:text-lg font-bold gradient-gold">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
+                                            <div class="flex items-center gap-1 sm:gap-1.5">
                                                 <button type="button"
-                                                        class="btn-minus w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-premium-black/50 hover:bg-premium-gold/20 border border-premium-gold/30 flex items-center justify-center font-bold text-premium-gold transition-all text-lg sm:text-xl"
+                                                        class="btn-minus w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-premium-black/50 hover:bg-premium-gold/20 border border-premium-gold/30 flex items-center justify-center font-bold text-premium-gold transition-all text-sm sm:text-base flex-shrink-0"
                                                         onclick="event.stopPropagation(); updateQuantity({{ $product->id }}, -1)">
                                                     −
                                                 </button>
                                                 <input type="number"
                                                        name="items[{{ $product->id }}][quantity]"
                                                        id="qty-{{ $product->id }}"
-                                                       class="qty-input w-12 sm:w-14 text-center bg-premium-black/50 border border-premium-gold/30 rounded-lg py-1 sm:py-2 font-bold text-premium-gold focus:border-premium-gold focus:outline-none text-base sm:text-lg"
+                                                       class="qty-input w-10 sm:w-12 text-center bg-premium-black/50 border border-premium-gold/30 rounded-lg py-1 font-bold text-premium-gold focus:border-premium-gold focus:outline-none text-xs sm:text-sm flex-shrink-0"
                                                        value="0"
                                                        min="0"
                                                        max="99"
@@ -540,7 +624,7 @@
                                                        onchange="updateQuantity({{ $product->id }}, 0)">
                                                 <input type="hidden" name="items[{{ $product->id }}][product_id]" value="{{ $product->id }}">
                                                 <button type="button"
-                                                        class="btn-plus w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-premium-gold hover:bg-gold-light flex items-center justify-center font-bold text-premium-black transition-all text-lg sm:text-xl"
+                                                        class="btn-plus w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-premium-gold hover:bg-gold-light flex items-center justify-center font-bold text-premium-black transition-all text-sm sm:text-base flex-shrink-0"
                                                         onclick="event.stopPropagation(); updateQuantity({{ $product->id }}, 1)">
                                                     +
                                                 </button>
@@ -1133,6 +1217,52 @@
         document.getElementById('checkoutModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 hideCheckoutModal();
+            }
+        });
+
+        // Category Filter Functionality
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const category = this.dataset.category;
+                
+                // Update active button
+                document.querySelectorAll('.category-btn').forEach(b => {
+                    b.classList.remove('bg-premium-gold', 'text-premium-black', 'border-premium-gold');
+                    b.classList.add('bg-premium-black/50', 'text-premium-gold', 'border-premium-gold/30');
+                });
+                this.classList.remove('bg-premium-black/50', 'text-premium-gold', 'border-premium-gold/30');
+                this.classList.add('bg-premium-gold', 'text-premium-black', 'border-premium-gold');
+                
+                // Filter products
+                document.querySelectorAll('.category-section').forEach(section => {
+                    if (category === 'all' || section.dataset.category === category) {
+                        section.classList.remove('hidden');
+                        // Trigger reveal animation
+                        setTimeout(() => {
+                            section.classList.add('active');
+                        }, 100);
+                    } else {
+                        section.classList.add('hidden');
+                        section.classList.remove('active');
+                    }
+                });
+                
+                // Update URL hash
+                if (category !== 'all') {
+                    history.pushState(null, null, `#category-${category}`);
+                } else {
+                    history.pushState(null, null, '#menu');
+                }
+            });
+        });
+
+        // Handle hash on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const hash = window.location.hash;
+            if (hash.startsWith('#category-')) {
+                const category = hash.replace('#category-', '');
+                const btn = document.querySelector(`.category-btn[data-category="${category}"]`);
+                if (btn) btn.click();
             }
         });
     </script>
