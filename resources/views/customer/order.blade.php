@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -950,32 +950,22 @@
                         </h3>
                         <div class="space-y-3 sm:space-y-4">
                             <div>
-                                <label for="customer_name" class="block text-xs sm:text-sm font-medium text-gray-300 mb-1 sm:mb-2">Nama Lengkap <span class="text-[#C69C6D]">*</span></label>
+                                <label for="customer_name" class="block text-xs sm:text-sm font-medium text-gray-300 mb-1 sm:mb-2">Nama Panggilan Antrian <span class="text-[#C69C6D]">*</span></label>
                                 <input type="text"
                                        name="customer_name"
                                        id="customer_name"
                                        required
                                        class="w-full px-3 sm:px-4 py-2 sm:py-3 bg-[#121212]/60 border-2 border-[#C69C6D]/30 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-[#C69C6D] focus:border-transparent transition text-white placeholder-gray-500 text-sm sm:text-base"
-                                       placeholder="Masukkan nama Anda">
+                                       placeholder="Masukkan nama panggilan">
                             </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                                <div>
-                                    <label for="phone" class="block text-xs sm:text-sm font-medium text-gray-300 mb-1 sm:mb-2">Nomor WhatsApp <span class="text-[#C69C6D]">*</span></label>
-                                    <input type="tel"
-                                           name="phone"
-                                           id="phone"
-                                           required
-                                           class="w-full px-3 sm:px-4 py-2 sm:py-3 bg-[#121212]/60 border-2 border-[#C69C6D]/30 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-[#C69C6D] focus:border-transparent transition text-white placeholder-gray-500 text-sm sm:text-base"
-                                           placeholder="08123456789">
-                                </div>
-                                <div>
-                                    <label for="email" class="block text-xs sm:text-sm font-medium text-gray-300 mb-1 sm:mb-2">Email</label>
-                                    <input type="email"
-                                           name="email"
-                                           id="email"
-                                           class="w-full px-3 sm:px-4 py-2 sm:py-3 bg-[#121212]/60 border-2 border-[#C69C6D]/30 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-[#C69C6D] focus:border-transparent transition text-white placeholder-gray-500 text-sm sm:text-base"
-                                           placeholder="email@contoh.com">
-                                </div>
+                            <div>
+                                <label for="phone" class="block text-xs sm:text-sm font-medium text-gray-300 mb-1 sm:mb-2">Nomor WhatsApp <span class="text-[#C69C6D]">*</span></label>
+                                <input type="tel"
+                                       name="phone"
+                                       id="phone"
+                                       required
+                                       class="w-full px-3 sm:px-4 py-2 sm:py-3 bg-[#121212]/60 border-2 border-[#C69C6D]/30 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-[#C69C6D] focus:border-transparent transition text-white placeholder-gray-500 text-sm sm:text-base"
+                                       placeholder="08123456789">
                             </div>
                         </div>
                     </div>

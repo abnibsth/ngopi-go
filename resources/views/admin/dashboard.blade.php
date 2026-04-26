@@ -209,6 +209,37 @@
         </div>
 
         <!-- Status & Payment Breakdown -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Produk Terlaris per Kategori (Pie Chart) -->
+            <div class="bg-[#1a120f] rounded-2xl shadow-md p-6 border border-[#C69C6D]/20">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-bold text-[#F5F0E6]">📊 Penjualan per Kategori</h3>
+                </div>
+                <canvas id="categoryChart" height="200"></canvas>
+            </div>
+
+            <!-- Top 10 Produk (Bar Chart) -->
+            <div class="bg-[#1a120f] rounded-2xl shadow-md p-6 lg:col-span-2 border border-[#C69C6D]/20">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-bold text-[#F5F0E6]">🏆 Top 10 Produk Terlaris</h3>
+                    <div class="flex gap-2">
+                        <button type="button" onclick="switchPeriod('7days')" id="btn-7days"
+                                class="px-3 py-1.5 rounded-lg text-xs font-semibold transition bg-[#C69C6D] text-[#121212] border border-[#C69C6D]">
+                            7 Hari
+                        </button>
+                        <button type="button" onclick="switchPeriod('month')" id="btn-month"
+                                class="px-3 py-1.5 rounded-lg text-xs font-semibold transition bg-[#1a120f] text-[#C69C6D] border border-[#C69C6D]/30 hover:border-[#C69C6D]">
+                            Bulan Ini
+                        </button>
+                    </div>
+                </div>
+                <canvas id="topProductsChart" height="100"></canvas>
+                <div class="mt-2 text-center">
+                    <p class="text-xs text-[#C69C6D]" id="chartPeriodLabel">Periode: 7 Hari Terakhir</p>
+                </div>
+            </div>
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             <!-- Orders by Status -->
             <div class="bg-[#1a120f] rounded-2xl shadow-md p-6 border border-[#C69C6D]/20">
@@ -403,6 +434,168 @@
                     }
                 }
             }
+        });
+
+        // Data untuk grafik produk dengan toggle
+        const last7DaysData = @json($top10Products);
+        const monthData = @json($top10ProductsMonth);
+        const categoryData7Days = @json($productsByCategory);
+        const categoryDataMonth = @json($productsByCategoryMonth);
+
+        let topProductsChart = null;
+        let categoryChart = null;
+        let currentPeriod = '7days';
+
+        // Inisialisasi Top Products Chart
+        function initTopProductsChart() {
+            const topProductsCtx = document.getElementById('topProductsChart').getContext('2d');
+            topProductsChart = new Chart(topProductsCtx, {
+                type: 'bar',
+                data: getProductsData('7days'),
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.x + ' terjual';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#C69C6D',
+                                precision: 0
+                            },
+                            grid: {
+                                color: 'rgba(198, 156, 109, 0.1)'
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: '#F5F0E6',
+                                font: {
+                                    size: 11
+                                }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Inisialisasi Category Chart
+        function initCategoryChart() {
+            const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+            categoryChart = new Chart(categoryCtx, {
+                type: 'doughnut',
+                data: getCategoryData('7days'),
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#F5F0E6',
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + context.parsed + ' terjual';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Get data untuk products chart berdasarkan periode
+        function getProductsData(period) {
+            const data = period === '7days' ? last7DaysData : monthData;
+            return {
+                labels: data.map(item => item.name.length > 20 ? item.name.substring(0, 20) + '...' : item.name),
+                datasets: [{
+                    label: 'Terjual',
+                    data: data.map(item => item.total_sold),
+                    backgroundColor: 'rgba(198, 156, 109, 0.8)',
+                    borderColor: '#C69C6D',
+                    borderWidth: 1,
+                    borderRadius: 8,
+                }]
+            };
+        }
+
+        // Get data untuk category chart berdasarkan periode
+        function getCategoryData(period) {
+            const data = period === '7days' ? categoryData7Days : categoryDataMonth;
+            return {
+                labels: data.map(item => item.category),
+                datasets: [{
+                    data: data.map(item => item.total_sold),
+                    backgroundColor: [
+                        '#C69C6D',
+                        '#D4AF7A',
+                        '#F5DEB3',
+                        '#4ade80',
+                        '#60a5fa',
+                    ],
+                    borderColor: '#1a120f',
+                    borderWidth: 2,
+                }]
+            };
+        }
+
+        // Switch periode
+        function switchPeriod(period) {
+            currentPeriod = period;
+            
+            // Update button styles
+            document.getElementById('btn-7days').className = 
+                period === '7days' 
+                    ? 'px-3 py-1.5 rounded-lg text-xs font-semibold transition bg-[#C69C6D] text-[#121212] border border-[#C69C6D]'
+                    : 'px-3 py-1.5 rounded-lg text-xs font-semibold transition bg-[#1a120f] text-[#C69C6D] border border-[#C69C6D]/30 hover:border-[#C69C6D]';
+            
+            document.getElementById('btn-month').className = 
+                period === 'month'
+                    ? 'px-3 py-1.5 rounded-lg text-xs font-semibold transition bg-[#C69C6D] text-[#121212] border border-[#C69C6D]'
+                    : 'px-3 py-1.5 rounded-lg text-xs font-semibold transition bg-[#1a120f] text-[#C69C6D] border border-[#C69C6D]/30 hover:border-[#C69C6D]';
+            
+            // Update label
+            document.getElementById('chartPeriodLabel').textContent = 
+                period === '7days' ? 'Periode: 7 Hari Terakhir' : 'Periode: Bulan Ini';
+            
+            // Update charts data
+            if (topProductsChart) {
+                topProductsChart.data = getProductsData(period);
+                topProductsChart.update();
+            }
+            if (categoryChart) {
+                categoryChart.data = getCategoryData(period);
+                categoryChart.update();
+            }
+        }
+
+        // Initialize charts on load
+        document.addEventListener('DOMContentLoaded', function() {
+            initTopProductsChart();
+            initCategoryChart();
         });
     </script>
 @endsection

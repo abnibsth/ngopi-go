@@ -12,7 +12,6 @@ class Order extends Model
         'table_number',
         'customer_name',
         'phone',
-        'email',
         'status',
         'payment_method',
         'payment_status',

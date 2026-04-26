@@ -54,7 +54,6 @@ class MidtransService
                 ],
                 'customer_details' => [
                     'first_name' => $order->customer_name,
-                    'email' => $order->email ?? 'noreply@ngopigo.com',
                     'phone' => $order->phone,
                 ],
                 'item_details' => $this->getItemDetails($order),
