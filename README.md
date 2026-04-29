@@ -333,13 +333,7 @@ php artisan test
 
 Project ini sudah terkonfigurasi dengan Midtrans Sandbox untuk development.
 
-**Sandbox Credentials** (`.env`):
-```env
-MIDTRANS_MERCHANT_ID=G091529286
-MIDTRANS_CLIENT_KEY=SB-Mid-client-DP1_x_7wqlAVWgyb
-MIDTRANS_SERVER_KEY=SB-Mid-server-O9qrYLyIraaizmXSmt_WQqWS
-MIDTRANS_IS_PRODUCTION=false
-```
+
 
 > ⚠️ **Penting**: Ganti dengan credential production Anda sebelum deploy!
 
