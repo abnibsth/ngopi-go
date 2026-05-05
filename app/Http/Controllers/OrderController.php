@@ -18,6 +18,40 @@ class OrderController extends Controller
     {
         $this->midtransService = $midtransService;
     }
+
+    /**
+     * Sinkronisasi status pembayaran via Midtrans API (fallback jika webhook tidak masuk,
+     * mis. aplikasi berjalan di localhost).
+     */
+    protected function syncMidtransPaymentIfNeeded(Order $order): void
+    {
+        if ($order->payment_method !== 'online') {
+            return;
+        }
+
+        if ($order->payment_status === 'paid') {
+            return;
+        }
+
+        $status = $this->midtransService->getTransactionStatus($order->order_number);
+        if (!is_array($status)) {
+            return;
+        }
+
+        $transactionStatus = $status['transaction_status'] ?? null;
+        $fraudStatus = $status['fraud_status'] ?? null;
+
+        $isPaid =
+            ($transactionStatus === 'settlement') ||
+            ($transactionStatus === 'capture' && ($fraudStatus === 'accept' || $fraudStatus === null));
+
+        if ($isPaid) {
+            $order->update([
+                'payment_status' => 'paid',
+                'status' => $order->status === 'pending' ? 'preparing' : $order->status,
+            ]);
+        }
+    }
     /**
      * Display a listing of the resource.
      */
@@ -26,6 +60,23 @@ class OrderController extends Controller
         $orders = Order::with('orderItems.product')
             ->latest()
             ->paginate(15);
+
+        // Auto-sync beberapa order online terbaru yang belum lunas,
+        // supaya kasir langsung melihat status "Lunas" tanpa manual.
+        $synced = 0;
+        foreach ($orders->getCollection() as $order) {
+            if ($synced >= 5) {
+                break;
+            }
+            if ($order->payment_method === 'online' && $order->payment_status !== 'paid') {
+                try {
+                    $this->syncMidtransPaymentIfNeeded($order);
+                    $synced++;
+                } catch (\Throwable $e) {
+                    // ignore sync failures
+                }
+            }
+        }
 
         return view('admin.orders.index', compact('orders'));
     }
@@ -81,6 +132,7 @@ class OrderController extends Controller
                 'phone' => $request->phone,
                 'status' => 'pending',
                 'payment_method' => $request->payment_method,
+                'payment_status' => 'pending',
                 'total_amount' => $totalAmount,
                 'notes' => $request->notes,
             ]);
@@ -204,16 +256,46 @@ class OrderController extends Controller
      */
     public function midtransCallback(Request $request)
     {
+        // Midtrans mengirim JSON (server-to-server). Laravel bisa parse via $request->all(),
+        // tapi kita fallback ke raw body untuk kasus content-type tidak terdeteksi.
         $notification = $request->all();
+        if (empty($notification)) {
+            $raw = $request->getContent();
+            $decoded = json_decode($raw, true);
+            if (is_array($decoded)) {
+                $notification = $decoded;
+            }
+        }
+
+        \Log::info('=== MIDTRANS CALLBACK RECEIVED ===');
+        \Log::info('Midtrans payload: ' . json_encode($notification));
         
         // Verifikasi signature key
-        $signatureKey = hash('sha512', $notification['order_id'] . $notification['status_code'] . $notification['gross_amount'] . config('services.midtrans.server_key'));
+        $orderId = $notification['order_id'] ?? null;
+        $statusCode = $notification['status_code'] ?? null;
+        $grossAmount = $notification['gross_amount'] ?? null;
+        $receivedSignature = $notification['signature_key'] ?? null;
+
+        if (!$orderId || !$statusCode || !$grossAmount || !$receivedSignature) {
+            \Log::warning('Midtrans callback missing required fields', [
+                'order_id' => $orderId,
+                'status_code' => $statusCode,
+                'gross_amount' => $grossAmount,
+                'signature_key_present' => !empty($receivedSignature),
+            ]);
+            return response()->json(['status' => 'bad request'], 400);
+        }
+
+        $signatureKey = hash('sha512', $orderId . $statusCode . $grossAmount . config('services.midtrans.server_key'));
         
-        if ($signatureKey !== ($notification['signature_key'] ?? '')) {
+        if (!hash_equals($signatureKey, (string) $receivedSignature)) {
+            \Log::warning('Midtrans callback invalid signature', [
+                'order_id' => $orderId,
+            ]);
             return response()->json(['status' => 'invalid signature'], 400);
         }
 
-        $order = Order::where('order_number', $notification['order_id'])->first();
+        $order = Order::where('order_number', $orderId)->first();
         
         if (!$order) {
             return response()->json(['status' => 'order not found'], 404);
@@ -236,9 +318,15 @@ class OrderController extends Controller
                 'payment_status' => 'paid'
             ]);
         } else if ($transactionStatus == 'pending') {
-            $order->update(['status' => 'pending']);
+            $order->update([
+                'status' => 'pending',
+                'payment_status' => 'pending',
+            ]);
         } else if ($transactionStatus == 'deny' || $transactionStatus == 'expire' || $transactionStatus == 'cancel') {
-            $order->update(['status' => 'cancelled']);
+            $order->update([
+                'status' => 'cancelled',
+                'payment_status' => 'pending',
+            ]);
         }
 
         return response()->json(['status' => 'ok']);
@@ -390,6 +478,14 @@ class OrderController extends Controller
             return response()->json(['paid' => false, 'error' => 'Order not found'], 404);
         }
 
+        // Fallback sync untuk pembayaran online (karena Midtrans webhook tidak bisa ke localhost).
+        try {
+            $this->syncMidtransPaymentIfNeeded($order);
+            $order->refresh();
+        } catch (\Throwable $e) {
+            // ignore
+        }
+
         return response()->json([
             'paid'           => $order->payment_status === 'paid',
             'payment_status' => $order->payment_status,
@@ -454,6 +550,7 @@ class OrderController extends Controller
                 'phone' => $request->phone,
                 'status' => 'pending',
                 'payment_method' => $request->payment_method,
+                'payment_status' => 'pending',
                 'total_amount' => $totalAmount,
             ]);
 

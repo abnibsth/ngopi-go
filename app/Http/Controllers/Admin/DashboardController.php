@@ -14,8 +14,23 @@ class DashboardController extends Controller
     /**
      * Display admin dashboard.
      */
-    public function index()
+    public function index(Request $request)
     {
+        // Periode dashboard (bulan): default 1 (bulan ini)
+        $allowedMonths = [1, 3, 6, 12];
+        $periodMonths = (int) $request->query('months', 1);
+        if (!in_array($periodMonths, $allowedMonths, true)) {
+            $periodMonths = 1;
+        }
+
+        $periodEnd = now()->endOfDay();
+        $periodStart = now()->copy()->startOfMonth()->subMonths($periodMonths - 1)->startOfDay();
+
+        // Label periode, contoh: "Mei 2026" atau "Mar–Mei 2026"
+        $startLabel = $periodStart->translatedFormat('M Y');
+        $endLabel = $periodEnd->translatedFormat('M Y');
+        $periodLabel = $periodMonths === 1 ? $endLabel : ($startLabel . '–' . $endLabel);
+
         // Statistik Utama
         $totalOrders = Order::count();
         $totalRevenue = Order::where('payment_status', 'paid')->sum('total_amount');
@@ -38,14 +53,11 @@ class DashboardController extends Controller
             ->sum('total_amount');
         $weekOrders = Order::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count();
 
-        // Statistik Bulan Ini
-        $monthRevenue = Order::whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
+        // Statistik Periode (default: Bulan Ini)
+        $monthRevenue = Order::whereBetween('created_at', [$periodStart, $periodEnd])
             ->where('payment_status', 'paid')
             ->sum('total_amount');
-        $monthOrders = Order::whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->count();
+        $monthOrders = Order::whereBetween('created_at', [$periodStart, $periodEnd])->count();
 
         // Top 5 Produk Terlaris
         $topProducts = DB::table('order_items')
@@ -73,7 +85,7 @@ class DashboardController extends Controller
             ->join('products', 'order_items.product_id', '=', 'products.id')
             ->join('orders', 'order_items.order_id', '=', 'orders.id')
             ->select('products.name', 'products.category', DB::raw('SUM(order_items.quantity) as total_sold'))
-            ->whereBetween('orders.created_at', [now()->startOfMonth(), now()->endOfMonth()])
+            ->whereBetween('orders.created_at', [$periodStart, $periodEnd])
             ->where('orders.payment_status', 'paid')
             ->groupBy('products.id', 'products.name', 'products.category')
             ->orderBy('total_sold', 'desc')
@@ -96,7 +108,7 @@ class DashboardController extends Controller
             ->join('products', 'order_items.product_id', '=', 'products.id')
             ->join('orders', 'order_items.order_id', '=', 'orders.id')
             ->select('products.category', DB::raw('SUM(order_items.quantity) as total_sold'))
-            ->whereBetween('orders.created_at', [now()->startOfMonth(), now()->endOfMonth()])
+            ->whereBetween('orders.created_at', [$periodStart, $periodEnd])
             ->where('orders.payment_status', 'paid')
             ->groupBy('products.category')
             ->orderBy('total_sold', 'desc')
@@ -150,6 +162,8 @@ class DashboardController extends Controller
             'weekOrders',
             'monthRevenue',
             'monthOrders',
+            'periodMonths',
+            'periodLabel',
             'topProducts',
             'top10Products',
             'top10ProductsMonth',

@@ -383,5 +383,32 @@
         }, 10000);
     </script>
     @endif
+
+    @if($order->payment_method === 'online' && $order->payment_status !== 'paid')
+    <script>
+        // Untuk pembayaran online: polling endpoint status-bayar yang sekarang juga melakukan sync ke Midtrans API.
+        // Ini penting kalau webhook Midtrans tidak bisa mengakses aplikasi (mis. masih localhost).
+        let tries = 0;
+        const maxTries = 24; // ~2 menit (5 detik sekali)
+        const intervalMs = 5000;
+
+        const onlineInterval = setInterval(function() {
+            tries++;
+            fetch('{{ route("order.check-payment", $order->order_number) }}')
+                .then(r => r.json())
+                .then(data => {
+                    if (data.paid) {
+                        clearInterval(onlineInterval);
+                        window.location.reload();
+                    }
+                })
+                .catch(() => {});
+
+            if (tries >= maxTries) {
+                clearInterval(onlineInterval);
+            }
+        }, intervalMs);
+    </script>
+    @endif
 </body>
 </html>

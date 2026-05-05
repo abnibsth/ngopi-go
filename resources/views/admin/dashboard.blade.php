@@ -48,10 +48,26 @@
             <p class="text-[#C69C6D] mt-1">Statistik Penjualan NgopiGo</p>
         </div>
         <div class="flex items-center gap-3">
+            <form method="GET" class="flex items-center gap-2">
+                <label for="months" class="text-xs text-[#C69C6D]">Periode</label>
+                <select id="months" name="months"
+                        onchange="this.form.submit()"
+                        class="bg-[#1a120f] text-[#F5F0E6] border border-[#C69C6D]/30 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#C69C6D]/40">
+                    <option value="1"  {{ (int)($periodMonths ?? 1) === 1 ? 'selected' : '' }}>Bulan ini</option>
+                    <option value="3"  {{ (int)($periodMonths ?? 1) === 3 ? 'selected' : '' }}>3 bulan terakhir</option>
+                    <option value="6"  {{ (int)($periodMonths ?? 1) === 6 ? 'selected' : '' }}>6 bulan terakhir</option>
+                    <option value="12" {{ (int)($periodMonths ?? 1) === 12 ? 'selected' : '' }}>12 bulan terakhir</option>
+                </select>
+            </form>
             <span class="text-sm text-[#C69C6D] bg-[#C69C6D]/20 px-4 py-2 rounded-lg border border-[#C69C6D]/30">
                 📅 {{ now()->format('d F Y') }}
             </span>
         </div>
+    </div>
+    <div class="mt-3">
+        <span class="text-xs text-[#C69C6D] bg-[#2E1F1A]/60 px-3 py-1.5 rounded-lg border border-[#C69C6D]/20">
+            Menampilkan periode: <span class="text-[#F5F0E6] font-semibold">{{ $periodLabel ?? now()->translatedFormat('M Y') }}</span>
+        </span>
     </div>
 </div>
         <!-- Quick Stats Cards -->
@@ -154,7 +170,9 @@
             <!-- Bulan Ini -->
             <div class="bg-[#1a120f] rounded-2xl shadow-md p-6 border-l-4 border-[#c084fc] premium-card">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-[#F5F0E6] font-semibold">📊 Bulan Ini</h3>
+                    <h3 class="text-[#F5F0E6] font-semibold">
+                        📊 {{ (int)($periodMonths ?? 1) === 1 ? 'Bulan Ini' : ((int)($periodMonths ?? 1) . ' Bulan Terakhir') }}
+                    </h3>
                     <span class="text-3xl">🗓️</span>
                 </div>
                 <div class="space-y-3">
@@ -165,6 +183,9 @@
                     <div class="flex justify-between items-center">
                         <span class="text-[#C69C6D]">Pendapatan</span>
                         <span class="font-bold text-[#c084fc]">Rp {{ number_format($monthRevenue, 0, ',', '.') }}</span>
+                    </div>
+                    <div class="pt-2 border-t border-[#C69C6D]/10">
+                        <span class="text-xs text-[#C69C6D]">Periode: {{ $periodLabel ?? '-' }}</span>
                     </div>
                 </div>
             </div>
@@ -229,7 +250,7 @@
                         </button>
                         <button type="button" onclick="switchPeriod('month')" id="btn-month"
                                 class="px-3 py-1.5 rounded-lg text-xs font-semibold transition bg-[#1a120f] text-[#C69C6D] border border-[#C69C6D]/30 hover:border-[#C69C6D]">
-                            Bulan Ini
+                            {{ (int)($periodMonths ?? 1) === 1 ? 'Bulan Ini' : ((int)($periodMonths ?? 1) . ' Bulan') }}
                         </button>
                     </div>
                 </div>
@@ -529,13 +550,26 @@
         // Get data untuk products chart berdasarkan periode
         function getProductsData(period) {
             const data = period === '7days' ? last7DaysData : monthData;
+            // Muted palette (lebih soft, tetap kontras di dark UI)
+            const muted = [
+                'rgba(198,156,109,0.55)', // gold
+                'rgba(147,197,253,0.50)', // soft blue
+                'rgba(167,243,208,0.45)', // mint
+                'rgba(253,230,138,0.45)', // soft amber
+                'rgba(196,181,253,0.45)', // soft purple
+                'rgba(253,186,116,0.45)', // soft orange
+                'rgba(252,165,165,0.40)', // soft red
+                'rgba(134,239,172,0.40)', // soft green
+                'rgba(165,243,252,0.40)', // soft cyan
+                'rgba(203,213,225,0.35)', // slate
+            ];
             return {
                 labels: data.map(item => item.name.length > 20 ? item.name.substring(0, 20) + '...' : item.name),
                 datasets: [{
                     label: 'Terjual',
                     data: data.map(item => item.total_sold),
-                    backgroundColor: 'rgba(198, 156, 109, 0.8)',
-                    borderColor: '#C69C6D',
+                    backgroundColor: data.map((_, i) => muted[i % muted.length]),
+                    borderColor: 'rgba(198,156,109,0.35)',
                     borderWidth: 1,
                     borderRadius: 8,
                 }]
@@ -545,19 +579,27 @@
         // Get data untuk category chart berdasarkan periode
         function getCategoryData(period) {
             const data = period === '7days' ? categoryData7Days : categoryDataMonth;
+            // Ultra-muted category colors (lebih netral, tidak nyorong di dark UI)
+            // Semua tetap punya beda hue tipis supaya kategori kebaca.
+            const categoryColors = [
+                'rgba(198,156,109,0.32)', // soft gold
+                'rgba(176,154,122,0.30)', // tan
+                'rgba(210,196,170,0.28)', // sand
+                'rgba(156,175,192,0.28)', // dusty blue
+                'rgba(176,168,192,0.28)', // dusty purple
+                'rgba(160,190,182,0.26)', // dusty mint
+                'rgba(200,186,150,0.26)', // muted amber
+                'rgba(190,198,206,0.24)', // cool slate
+            ];
             return {
                 labels: data.map(item => item.category),
                 datasets: [{
                     data: data.map(item => item.total_sold),
-                    backgroundColor: [
-                        '#C69C6D',
-                        '#D4AF7A',
-                        '#F5DEB3',
-                        '#4ade80',
-                        '#60a5fa',
-                    ],
-                    borderColor: '#1a120f',
+                    backgroundColor: data.map((_, i) => categoryColors[i % categoryColors.length]),
+                    borderColor: 'rgba(18,18,18,0.9)',
                     borderWidth: 2,
+                    hoverBorderColor: 'rgba(198,156,109,0.35)',
+                    hoverBorderWidth: 2,
                 }]
             };
         }
@@ -579,7 +621,9 @@
             
             // Update label
             document.getElementById('chartPeriodLabel').textContent = 
-                period === '7days' ? 'Periode: 7 Hari Terakhir' : 'Periode: Bulan Ini';
+                period === '7days'
+                    ? 'Periode: 7 Hari Terakhir'
+                    : 'Periode: {{ $periodLabel ?? now()->translatedFormat("M Y") }}';
             
             // Update charts data
             if (topProductsChart) {
