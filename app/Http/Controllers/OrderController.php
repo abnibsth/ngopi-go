@@ -560,10 +560,11 @@ class OrderController extends Controller
                 $subtotal = $product->price * $item['quantity'];
 
                 \App\Models\OrderItem::create([
-                    'order_id' => $order->id,
+                    'order_id'   => $order->id,
                     'product_id' => $item['product_id'],
-                    'quantity' => $item['quantity'],
-                    'subtotal' => $subtotal,
+                    'quantity'   => $item['quantity'],
+                    'price'      => $product->price,
+                    'subtotal'   => $subtotal,
                 ]);
             }
 

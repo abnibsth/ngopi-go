@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -6,416 +6,223 @@
     <title>NgopiGo - Premium Coffee & Bites</title>
             <link rel="icon" href="{{ asset('images/logo.jpeg') }}" type="image/x-icon">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         /* Custom Premium Colors */
         :root {
-            --black: #121212;
-            --dark-brown: #2E1F1A;
-            --gold: #C69C6D;
-            --gold-light: #D4AF7A;
-            --cream: #F5F0E6;
+            --black: #0e0c0a;
+            --dark-brown: #1e1410;
+            --mid-brown: #2a1c16;
+            --gold: #b8924a;
+            --gold-light: #d4af7a;
+            --gold-pale: #e8d5b0;
+            --cream: #f4ede3;
+            --warm-white: #faf7f2;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--black);
+            color: var(--cream);
+        }
+
+        h1, h2, h3, .font-serif {
+            font-family: 'Playfair Display', serif;
         }
         
         .bg-premium-black { background-color: var(--black); }
         .bg-premium-brown { background-color: var(--dark-brown); }
+        .bg-mid-brown { background-color: var(--mid-brown); }
         .bg-premium-gold { background-color: var(--gold); }
         .text-premium-gold { color: var(--gold); }
+        .text-gold-light { color: var(--gold-light); }
+        .text-gold-pale { color: var(--gold-pale); }
         .border-premium-gold { border-color: var(--gold); }
+        .border-gold-dim { border-color: rgba(184,146,74,0.25); }
         
-        /* Hero Slider Animation */
-        @keyframes slideLeft {
-            0% { transform: translateX(100%); opacity: 0; }
-            10% { transform: translateX(0); opacity: 1; }
-            90% { transform: translateX(0); opacity: 1; }
-            100% { transform: translateX(-100%); opacity: 0; }
+        /* Hero Fade Slider */
+        @keyframes heroFade {
+            0%   { opacity: 0; transform: scale(1.05); }
+            8%   { opacity: 1; transform: scale(1); }
+            38%  { opacity: 1; transform: scale(1.02); }
+            44%  { opacity: 0; transform: scale(1.04); }
+            100% { opacity: 0; }
         }
-        
         .hero-slide {
-            animation: slideLeft 12s infinite;
+            animation: heroFade 18s ease-in-out infinite;
+            position: absolute;
+            inset: 0;
         }
-        
-        .hero-slide:nth-child(2) {
-            animation-delay: 4s;
-        }
-        
-        .hero-slide:nth-child(3) {
-            animation-delay: 8s;
-        }
+        .hero-slide:nth-child(2) { animation-delay: 6s; }
+        .hero-slide:nth-child(3) { animation-delay: 12s; }
         
         /* Gradient Text */
         .gradient-gold {
-            background: linear-gradient(135deg, #C69C6D 0%, #F5DEB3 50%, #C69C6D 100%);
+            background: linear-gradient(120deg, #b8924a 0%, #e8d5b0 45%, #c4a265 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
         
-        /* Premium Card Hover */
+        /* Premium Card */
         .premium-card {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                        box-shadow 0.35s ease,
+                        border-color 0.3s ease;
         }
-        
         .premium-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(198, 156, 109, 0.2);
+            transform: translateY(-6px);
+            box-shadow: 0 18px 36px rgba(184,146,74,0.18), 0 4px 12px rgba(0,0,0,0.4);
+            border-color: rgba(184,146,74,0.5);
         }
         
-        /* Gold Border Animation */
+        /* Subtle inner glow on hover */
         .gold-border-animate {
             position: relative;
         }
         
-        .gold-border-animate::before {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            background: linear-gradient(45deg, #C69C6D, #F5DEB3, #C69C6D);
-            background-size: 200% 200%;
-            border-radius: inherit;
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            animation: gradientShift 3s ease infinite;
-        }
-        
-        .gold-border-animate:hover::before {
-            opacity: 1;
-        }
-        
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        
-        /* Scrollbar Custom */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: var(--dark-brown);
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: var(--gold);
-            border-radius: 4px;
-        }
-        
-        /* Smooth Scroll */
-        html {
-            scroll-behavior: smooth;
-        }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--dark-brown); }
+        ::-webkit-scrollbar-thumb { background: rgba(184,146,74,0.5); border-radius: 3px; }
+        html { scroll-behavior: smooth; }
 
-        /* Scroll Reveal Animation */
+        /* Scroll Reveal */
         .reveal {
             opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(30px);
+            transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
         }
+        .reveal.active { opacity: 1; transform: translateY(0); }
 
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Product Card Animation - Staggered entrance */
-        .product-card {
-            opacity: 0;
-            transform: translateY(30px) scale(0.95);
-            animation: productFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-
-        .product-card:nth-child(1) { animation-delay: 0.1s; }
-        .product-card:nth-child(2) { animation-delay: 0.2s; }
-        .product-card:nth-child(3) { animation-delay: 0.3s; }
-        .product-card:nth-child(4) { animation-delay: 0.4s; }
-        .product-card:nth-child(5) { animation-delay: 0.5s; }
-        .product-card:nth-child(6) { animation-delay: 0.6s; }
-
-        @keyframes productFadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        /* Ensure product cards maintain square shape */
+        /* Product Card */
         .product-card {
             display: flex;
             flex-direction: column;
             height: 100%;
+            opacity: 0;
+            transform: translateY(22px);
+            animation: cardIn 0.55s cubic-bezier(0.23, 1, 0.32, 1) forwards;
         }
+        .product-card:nth-child(1) { animation-delay: 0.06s; }
+        .product-card:nth-child(2) { animation-delay: 0.12s; }
+        .product-card:nth-child(3) { animation-delay: 0.18s; }
+        .product-card:nth-child(4) { animation-delay: 0.24s; }
+        .product-card:nth-child(5) { animation-delay: 0.30s; }
+        .product-card:nth-child(6) { animation-delay: 0.36s; }
+        @keyframes cardIn { to { opacity: 1; transform: translateY(0); } }
+        .product-card .aspect-square { flex-shrink: 0; }
+        .product-card > div:last-child { flex: 1; }
 
-        .product-card .aspect-square {
-            flex-shrink: 0;
-        }
+        /* Product Image */
+        .product-image { transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .premium-card:hover .product-image { transform: scale(1.07); }
 
-        .product-card > div:last-child {
-            flex: 1;
-        }
+        /* Card - relative + overflow */
+        .premium-card { position: relative; overflow: hidden; }
 
-        /* Product Image Zoom Animation */
-        .product-image {
-            transition: transform 0.5s ease;
-        }
-
-        .premium-card:hover .product-image {
-            transform: scale(1.05);
-        }
-
-        /* Ripple Effect on Click */
-        .premium-card {
-            position: relative;
-            overflow: hidden;
-        }
-
+        /* Ripple */
         .ripple {
-            position: absolute;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(198, 156, 109, 0.4) 0%, transparent 70%);
+            position: absolute; border-radius: 50%;
+            background: radial-gradient(circle, rgba(184,146,74,0.35) 0%, transparent 70%);
             transform: scale(0);
-            animation: rippleEffect 0.6s ease-out;
+            animation: rippleOut 0.55s ease-out;
             pointer-events: none;
         }
+        @keyframes rippleOut { to { transform: scale(4); opacity: 0; } }
 
-        @keyframes rippleEffect {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
-        }
-
-        /* Glow Effect on Hover */
-        .premium-card::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(198, 156, 109, 0.15) 0%, transparent 60%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
-
-        .premium-card:hover::after {
-            opacity: 1;
-        }
-
-        /* Pulse Animation for Price */
-        @keyframes pulseGold {
-            0%, 100% {
-                filter: drop-shadow(0 0 0 transparent);
-            }
-            50% {
-                filter: drop-shadow(0 0 8px rgba(198, 156, 109, 0.6));
-            }
-        }
-
-        .gradient-gold {
-            animation: pulseGold 3s ease-in-out infinite;
-        }
-
-        .premium-card:hover .gradient-gold {
-            animation: pulseGold 1.5s ease-in-out infinite;
-        }
-
-        /* Bounce Animation for Add Button */
-        @keyframes bounceIn {
-            0% {
-                transform: scale(0.8);
-                opacity: 0;
-            }
-            50% {
-                transform: scale(1.1);
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        .btn-plus {
-            animation: bounceIn 0.3s ease-out;
-        }
-
-        /* Shine Effect */
+        /* Shimmer on hover */
         .premium-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(198, 156, 109, 0.1), transparent);
-            transition: left 0.5s ease;
-            z-index: 10;
+            content: ''; position: absolute;
+            top: 0; left: -100%; width: 60%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+            transition: left 0.6s ease; z-index: 10;
+        }
+        .premium-card:hover::before { left: 150%; }
+        /* Reveal variants */
+        .reveal-left { opacity:0; transform:translateX(-36px); transition: opacity .7s ease, transform .7s cubic-bezier(0.23,1,0.32,1); }
+        .reveal-left.active { opacity:1; transform:translateX(0); }
+        .reveal-right { opacity:0; transform:translateX(36px); transition: opacity .7s ease, transform .7s cubic-bezier(0.23,1,0.32,1); }
+        .reveal-right.active { opacity:1; transform:translateX(0); }
+        .reveal-scale { opacity:0; transform:scale(0.88); transition: opacity .6s ease, transform .6s cubic-bezier(0.23,1,0.32,1); }
+        .reveal-scale.active { opacity:1; transform:scale(1); }
+        .reveal-image { opacity:0; transform:scale(0.93); transition: opacity .7s ease, transform .7s cubic-bezier(0.23,1,0.32,1); }
+        .reveal-image.active { opacity:1; transform:scale(1); }
+
+        /* Stagger children */
+        .reveal-stagger > * { opacity:0; transform:translateY(18px); transition: opacity .5s ease, transform .5s cubic-bezier(0.23,1,0.32,1); }
+        .reveal-stagger.active > * { opacity:1; transform:translateY(0); }
+        .reveal-stagger.active > *:nth-child(1) { transition-delay:.08s; }
+        .reveal-stagger.active > *:nth-child(2) { transition-delay:.16s; }
+        .reveal-stagger.active > *:nth-child(3) { transition-delay:.24s; }
+        .reveal-stagger.active > *:nth-child(4) { transition-delay:.32s; }
+
+        /* Feature card */
+        .feature-card { opacity:0; transform:translateY(24px); transition: opacity .5s ease, transform .5s cubic-bezier(0.23,1,0.32,1); }
+        .feature-card.active { opacity:1; transform:translateY(0); }
+        .feature-card:nth-child(2) { transition-delay:.12s; }
+        .feature-card:nth-child(3) { transition-delay:.24s; }
+        .feature-card:nth-child(4) { transition-delay:.36s; }
+
+        /* Social card */
+        .social-card { opacity:0; transform:translateY(16px); transition: opacity .45s ease, transform .45s cubic-bezier(0.23,1,0.32,1); }
+        .social-card.active { opacity:1; transform:translateY(0); }
+        .social-card:nth-child(1) { transition-delay:.06s; }
+        .social-card:nth-child(2) { transition-delay:.12s; }
+        .social-card:nth-child(3) { transition-delay:.18s; }
+        .social-card:nth-child(4) { transition-delay:.24s; }
+
+        /* Footer content */
+        .footer-content { opacity:0; transform:translateY(24px); transition: opacity .6s ease, transform .6s cubic-bezier(0.23,1,0.32,1); }
+        .footer-content.active { opacity:1; transform:translateY(0); }
+
+        /* Scrollbar hide */
+        .scrollbar-hide { -ms-overflow-style:none; scrollbar-width:none; }
+        .scrollbar-hide::-webkit-scrollbar { display:none; }
+
+        /* Category section */
+        .category-section { transition: opacity .4s ease, transform .4s ease; }
+        .category-section.hidden { display:none; }
+        .category-section.active { animation: catIn .45s ease-out; }
+        @keyframes catIn { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+        /* SVG icon sizing */
+        .icon-sm { width:18px; height:18px; }
+        .icon-md { width:22px; height:22px; }
+        .icon-lg { width:28px; height:28px; }
+        .icon-xl { width:36px; height:36px; }
+
+        /* Qty button */
+        .qty-btn {
+            display: flex; align-items: center; justify-content: center;
+            transition: background-color .2s ease, transform .15s ease;
+        }
+        .qty-btn:active { transform: scale(0.88); }
+
+        /* Nav bar floating */
+        #topNav {
+            position: sticky; top: 0; z-index: 50;
+            background: rgba(14,12,10,0.85);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(184,146,74,0.15);
+            transition: background .3s ease;
         }
 
-        .premium-card:hover::before {
-            left: 100%;
-        }
-        /* Reveal from left */
-        .reveal-left {
-            opacity: 0;
-            transform: translateX(-50px);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Gold divider line */
+        .gold-line {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(184,146,74,0.6), transparent);
         }
 
-        .reveal-left.active {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        /* Reveal from right */
-        .reveal-right {
-            opacity: 0;
-            transform: translateX(50px);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .reveal-right.active {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        /* Reveal with scale */
-        .reveal-scale {
-            opacity: 0;
-            transform: scale(0.8);
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .reveal-scale.active {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        /* Staggered reveal for children */
-        .reveal-stagger > * {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .reveal-stagger.active > *:nth-child(1) { transition-delay: 0.1s; }
-        .reveal-stagger.active > *:nth-child(2) { transition-delay: 0.2s; }
-        .reveal-stagger.active > *:nth-child(3) { transition-delay: 0.3s; }
-        .reveal-stagger.active > *:nth-child(4) { transition-delay: 0.4s; }
-
-        .reveal-stagger.active > * {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Reveal for images */
-        .reveal-image {
-            opacity: 0;
-            transform: scale(0.9);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .reveal-image.active {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        /* Feature Card Animation */
-        .feature-card {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .feature-card.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .feature-card:nth-child(2) { transition-delay: 0.15s; }
-        .feature-card:nth-child(3) { transition-delay: 0.3s; }
-        .feature-card:nth-child(4) { transition-delay: 0.45s; }
-
-        /* Social Card Animation */
-        .social-card {
-            opacity: 0;
-            transform: translateY(20px) scale(0.9);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .social-card.active {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-
-        .social-card:nth-child(1) { transition-delay: 0.1s; }
-        .social-card:nth-child(2) { transition-delay: 0.2s; }
-        .social-card:nth-child(3) { transition-delay: 0.3s; }
-        .social-card:nth-child(4) { transition-delay: 0.4s; }
-
-        /* Footer Animation */
-        .footer-content {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .footer-content.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Float animation for decorative elements */
-        @keyframes floatSlow {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
-        }
-
-        .float-decor {
-            animation: floatSlow 6s ease-in-out infinite;
-        }
-
-        /* Glow pulse for decorative elements */
-        @keyframes glowPulse {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.6; }
-        }
-
-        .glow-pulse {
-            animation: glowPulse 4s ease-in-out infinite;
-        }
-
-        /* Hide scrollbar for category filter */
-        .scrollbar-hide {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-        }
-
-        /* Category section transition */
-        .category-section {
-            transition: opacity 0.4s ease, transform 0.4s ease;
-        }
-
-        .category-section.hidden {
-            display: none;
-        }
-
-        .category-section.active {
-            animation: categoryFadeIn 0.5s ease-out;
-        }
-
-        @keyframes categoryFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* Floating cart */
+        #cartSummary {
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
         }
     </style>
 </head>
@@ -452,49 +259,57 @@
         <!-- Hero Content -->
         <div class="relative z-20 container mx-auto px-4 h-full flex items-center">
             <div class="max-w-3xl">
-                <div class="inline-block mb-4 px-6 py-2 border border-premium-gold/50 rounded-full bg-premium-brown/30 backdrop-blur-sm">
-                    <span class="text-premium-gold text-sm font-medium tracking-wider">☕ PREMIUM COFFEE EXPERIENCE</span>
+                <!-- Badge -->
+                <div class="inline-flex items-center gap-2 mb-5 px-5 py-2 border border-[rgba(184,146,74,0.4)] rounded-full bg-[rgba(30,20,16,0.5)] backdrop-blur-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm text-premium-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15M14.25 3.104c.251.023.501.05.75.082M19.8 15a2.25 2.25 0 01-2.15 1.5H6.35A2.25 2.25 0 014.2 15M19.8 15v-3M4.2 15v-3" />
+                    </svg>
+                    <span class="text-[var(--gold-pale)] text-xs font-medium tracking-widest uppercase">Premium Coffee Experience</span>
                 </div>
-                
-                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-4 md:mb-6 leading-tight">
-                    <span class="gradient-gold">NgopiGo</span>
-                    <br>
-                    <span class="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl">Taste the Excellence</span>
+
+                <h1 class="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold mb-4 md:mb-6 leading-[1.1]">
+                    <span class="gradient-gold">NgopiGo</span><br>
+                    <span class="text-white text-2xl sm:text-3xl md:text-4xl lg:text-[2.8rem] font-light tracking-wide">Taste the Excellence</span>
                 </h1>
 
-                <p class="text-base sm:text-lg md:text-xl text-white mb-6 md:mb-8 leading-relaxed max-w-2xl font-medium">
-                    Nikmati setiap tegukan kopi premium pilihan dengan cita rasa autentik.
-                    Dari biji kopi terbaik langsung ke cangkir Anda.
+                <p class="text-sm sm:text-base md:text-lg text-white/75 mb-7 md:mb-10 leading-relaxed max-w-xl font-light">
+                    Nikmati setiap tegukan kopi premium dari biji pilihan terbaik,<br class="hidden sm:block"> langsung ke cangkir Anda.
                 </p>
-                
-                <div class="flex flex-wrap gap-3 sm:gap-4">
-                    <a href="#menu"
-                       onclick="smoothScrollTo('menu')"
-                       class="group bg-premium-gold hover:bg-gold-light text-premium-black font-bold py-3 px-6 sm:py-4 sm:px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-premium-gold/50 text-sm sm:text-base">
-                        🛒 Pesan Sekarang
-                        <span class="inline-block ml-2 group-hover:translate-x-1 transition-transform">→</span>
+
+                <div class="flex flex-wrap gap-3">
+                    <a href="#menu" onclick="smoothScrollTo('menu')"
+                       class="group inline-flex items-center gap-2 bg-[var(--gold)] hover:bg-[var(--gold-light)] text-[var(--black)] font-semibold py-3 px-7 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+                        </svg>
+                        Pesan Sekarang
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
                     </a>
-                    <a href="#about"
-                       onclick="smoothScrollTo('about')"
-                       class="border-2 border-premium-gold/50 hover:border-premium-gold text-premium-gold font-bold py-3 px-6 sm:py-4 sm:px-8 rounded-full transition-all duration-300 hover:bg-premium-gold/10 text-sm sm:text-base">
-                        ℹ️ Tentang Kami
+                    <a href="#about" onclick="smoothScrollTo('about')"
+                       class="inline-flex items-center gap-2 border border-[rgba(184,146,74,0.45)] hover:border-[var(--gold)] text-[var(--gold)] hover:bg-[rgba(184,146,74,0.08)] font-medium py-3 px-7 rounded-full transition-all duration-300 text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                        </svg>
+                        Tentang Kami
                     </a>
                 </div>
 
                 <!-- Stats -->
-                <div class="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6 mt-8 md:mt-12 pt-6 md:pt-8 relative">
-                    <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#C69C6D]/50 to-transparent"></div>
-                    <div class="text-center">
-                        <div class="text-2xl sm:text-3xl font-bold gradient-gold">20+</div>
-                        <div class="text-xs sm:text-sm text-white/90 mt-1 font-medium">Menu Premium</div>
+                <div class="flex gap-8 mt-10 pt-8 relative">
+                    <div class="absolute inset-x-0 top-0 gold-line"></div>
+                    <div class="text-left">
+                        <div class="text-2xl sm:text-3xl font-serif font-semibold gradient-gold">20+</div>
+                        <div class="text-xs text-white/60 mt-1 tracking-wide">Menu Premium</div>
                     </div>
-                    <div class="text-center">
-                        <div class="text-2xl sm:text-3xl font-bold gradient-gold">100%</div>
-                        <div class="text-xs sm:text-sm text-white/90 mt-1 font-medium">Biji Arabika</div>
+                    <div class="text-left">
+                        <div class="text-2xl sm:text-3xl font-serif font-semibold gradient-gold">100%</div>
+                        <div class="text-xs text-white/60 mt-1 tracking-wide">Biji Arabika</div>
                     </div>
-                    <div class="text-center">
-                        <div class="text-2xl sm:text-3xl font-bold gradient-gold">24/7</div>
-                        <div class="text-xs sm:text-sm text-white/90 mt-1 font-medium">Online Order</div>
+                    <div class="text-left">
+                        <div class="text-2xl sm:text-3xl font-serif font-semibold gradient-gold">24/7</div>
+                        <div class="text-xs text-white/60 mt-1 tracking-wide">Online Order</div>
                     </div>
                 </div>
             </div>
@@ -509,47 +324,59 @@
     </section>
 
     <!-- Menu Section -->
-    <section id="menu" class="py-12 md:py-16 lg:py-20 bg-gradient-to-b from-premium-black to-premium-brown">
+    <section id="menu" class="py-12 md:py-16 lg:py-20 bg-gradient-to-b from-[var(--black)] to-[var(--dark-brown)]">
         <div class="container mx-auto px-4">
             <!-- Section Header -->
-            <div class="text-center mb-6 md:mb-10">
-                <span class="text-premium-gold text-xs sm:text-sm font-medium tracking-wider uppercase">Our Premium Selection</span>
-                <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mt-4 mb-4 md:mb-6">
+            <div class="text-center mb-6 md:mb-10 reveal">
+                <span class="text-[var(--gold)] text-xs font-medium tracking-widest uppercase">Our Premium Selection</span>
+                <h2 class="font-serif text-3xl sm:text-4xl md:text-5xl font-semibold mt-3 mb-3">
                     <span class="gradient-gold">Menu Favorit</span>
                 </h2>
-                <p class="text-white max-w-2xl mx-auto text-sm sm:text-lg font-medium">
+                <p class="text-white/60 max-w-md mx-auto text-sm font-light">
                     Pilihan menu terbaik dari barista profesional kami
                 </p>
+                <div class="gold-line max-w-xs mx-auto mt-5"></div>
             </div>
 
-            <!-- Category Filter Buttons - Sticky -->
-            <div class="sticky top-4 z-40 mb-8 md:mb-12">
-                <div class="bg-premium-black/80 backdrop-blur-md rounded-full p-2 border border-premium-gold/20 shadow-xl">
-                    <div class="flex gap-2 overflow-x-auto scrollbar-hide" id="categoryFilter">
-                        <button type="button" 
-                                data-category="all" 
-                                class="category-btn flex-shrink-0 px-4 sm:px-6 py-2 sm:py-3 rounded-full text-sm sm:text-base font-bold transition-all duration-300 bg-premium-gold text-premium-black border border-premium-gold">
-                            🍽️ Semua Menu
+            <!-- Category Filter -->
+            <div id="topNav" class="mb-8 md:mb-12">
+                <div class="container mx-auto px-4">
+                    <div class="flex gap-2 overflow-x-auto scrollbar-hide py-3" id="categoryFilter">
+                        <button type="button" data-category="all"
+                                class="category-btn flex-shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-250 bg-[var(--gold)] text-[var(--black)] border border-[var(--gold)]">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+                            </svg>
+                            Semua
                         </button>
-                        <button type="button" 
-                                data-category="coffee" 
-                                class="category-btn flex-shrink-0 px-4 sm:px-6 py-2 sm:py-3 rounded-full text-sm sm:text-base font-bold transition-all duration-300 bg-premium-black/50 text-premium-gold border border-premium-gold/30 hover:border-premium-gold">
-                            ☕ Coffee
+                        <button type="button" data-category="coffee"
+                                class="category-btn flex-shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-250 bg-transparent text-[var(--gold)] border border-[rgba(184,146,74,0.3)] hover:border-[var(--gold)]">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15M14.25 3.104c.251.023.501.05.75.082M19.8 15a2.25 2.25 0 01-2.15 1.5H6.35A2.25 2.25 0 014.2 15M19.8 15v-3M4.2 15v-3" />
+                            </svg>
+                            Coffee
                         </button>
-                        <button type="button" 
-                                data-category="non-coffee" 
-                                class="category-btn flex-shrink-0 px-4 sm:px-6 py-2 sm:py-3 rounded-full text-sm sm:text-base font-bold transition-all duration-300 bg-premium-black/50 text-premium-gold border border-premium-gold/30 hover:border-premium-gold">
-                            🍵 Non Coffee
+                        <button type="button" data-category="non-coffee"
+                                class="category-btn flex-shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-250 bg-transparent text-[var(--gold)] border border-[rgba(184,146,74,0.3)] hover:border-[var(--gold)]">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1A3.75 3.75 0 0012 18z" />
+                            </svg>
+                            Non Coffee
                         </button>
-                        <button type="button" 
-                                data-category="food" 
-                                class="category-btn flex-shrink-0 px-4 sm:px-6 py-2 sm:py-3 rounded-full text-sm sm:text-base font-bold transition-all duration-300 bg-premium-black/50 text-premium-gold border border-premium-gold/30 hover:border-premium-gold">
-                            🍛 Food
+                        <button type="button" data-category="food"
+                                class="category-btn flex-shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-250 bg-transparent text-[var(--gold)] border border-[rgba(184,146,74,0.3)] hover:border-[var(--gold)]">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8.25v-1.5m0 1.5c-1.355 0-2.697.056-4.024.166C6.845 8.51 6 9.473 6 10.608v2.513m6-4.871c1.355 0 2.697.056 4.024.166C17.155 8.51 18 9.473 18 10.608v2.513M15 8.25v-1.5m-6 1.5v-1.5m12 9.75l-1.5.75a3.354 3.354 0 01-3 0 3.354 3.354 0 00-3 0 3.354 3.354 0 01-3 0 3.354 3.354 0 00-3 0 3.354 3.354 0 01-3 0L3 16.5m15-3.379a48.474 48.474 0 00-6-.371c-2.032 0-4.034.126-6 .371m12 0c.39.049.777.102 1.163.16 1.07.16 1.837 1.094 1.837 2.175v5.169c0 .621-.504 1.125-1.125 1.125H4.125A1.125 1.125 0 013 20.625v-5.169c0-1.08.768-2.014 1.837-2.175A47.78 47.78 0 016 13.12M12.265 3.11a.375.375 0 11-.53 0L12 2.845l.265.265zm-3 0a.375.375 0 11-.53 0L9 2.845l.265.265zm6 0a.375.375 0 11-.53 0L15 2.845l.265.265z" />
+                            </svg>
+                            Food
                         </button>
-                        <button type="button" 
-                                data-category="snack" 
-                                class="category-btn flex-shrink-0 px-4 sm:px-6 py-2 sm:py-3 rounded-full text-sm sm:text-base font-bold transition-all duration-300 bg-premium-black/50 text-premium-gold border border-premium-gold/30 hover:border-premium-gold">
-                            🍟 Snacks
+                        <button type="button" data-category="snack"
+                                class="category-btn flex-shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-250 bg-transparent text-[var(--gold)] border border-[rgba(184,146,74,0.3)] hover:border-[var(--gold)]">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 109.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1114.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+                            </svg>
+                            Snacks
                         </button>
                     </div>
                 </div>
@@ -562,15 +389,31 @@
                     <input type="hidden" name="table_number" value="{{ $tableNumber }}">
 
                     <!-- Menu Categories -->
-                    @foreach(['coffee' => ['icon' => '☕', 'name' => 'Signature Coffee'], 'non-coffee' => ['icon' => '🍵', 'name' => 'Non Coffee'], 'food' => ['icon' => '🍛', 'name' => 'Premium Food'], 'snack' => ['icon' => '🍟', 'name' => 'Snacks & Bites']] as $categoryKey => $categoryData)
+                    @foreach(['coffee' => ['icon' => 'coffee', 'name' => 'Signature Coffee'], 'non-coffee' => ['icon' => 'flame', 'name' => 'Non Coffee'], 'food' => ['icon' => 'food', 'name' => 'Premium Food'], 'snack' => ['icon' => 'gift', 'name' => 'Snacks & Bites']] as $categoryKey => $categoryData)
                         @if(isset($products[$categoryKey]) && $products[$categoryKey]->count() > 0)
                         <div class="mb-12 md:mb-16 reveal category-section" data-category="{{ $categoryKey }}">
                             <!-- Category Header -->
                             <div class="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
-                                <div class="text-3xl sm:text-4xl">{{ $categoryData['icon'] }}</div>
+                                @if($categoryData['icon'] === 'coffee')
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon-xl text-[var(--gold)] opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15M14.25 3.104c.251.023.501.05.75.082M19.8 15a2.25 2.25 0 01-2.15 1.5H6.35A2.25 2.25 0 014.2 15M19.8 15v-3M4.2 15v-3" />
+                                </svg>
+                                @elseif($categoryData['icon'] === 'flame')
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon-xl text-[var(--gold)] opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" />
+                                </svg>
+                                @elseif($categoryData['icon'] === 'food')
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon-xl text-[var(--gold)] opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8.25v-1.5m0 1.5c-1.355 0-2.697.056-4.024.166C6.845 8.51 6 9.473 6 10.608v2.513m6-4.871c1.355 0 2.697.056 4.024.166C17.155 8.51 18 9.473 18 10.608v2.513M15 8.25v-1.5m-6 1.5v-1.5m12 9.75l-1.5.75a3.354 3.354 0 01-3 0 3.354 3.354 0 00-3 0 3.354 3.354 0 01-3 0 3.354 3.354 0 00-3 0 3.354 3.354 0 01-3 0L3 16.5m15-3.379a48.474 48.474 0 00-6-.371c-2.032 0-4.034.126-6 .371m12 0c.39.049.777.102 1.163.16 1.07.16 1.837 1.094 1.837 2.175v5.169c0 .621-.504 1.125-1.125 1.125H4.125A1.125 1.125 0 013 20.625v-5.169c0-1.08.768-2.014 1.837-2.175A47.78 47.78 0 016 13.12M12.265 3.11a.375.375 0 11-.53 0L12 2.845l.265.265zm-3 0a.375.375 0 11-.53 0L9 2.845l.265.265zm6 0a.375.375 0 11-.53 0L15 2.845l.265.265z" />
+                                </svg>
+                                @else
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon-xl text-[var(--gold)] opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 109.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1114.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+                                </svg>
+                                @endif
                                 <div>
-                                    <h3 class="text-2xl sm:text-3xl font-bold text-premium-gold">{{ $categoryData['name'] }}</h3>
-                                    <div class="w-16 sm:w-24 h-1 bg-premium-gold mt-2"></div>
+                                    <h3 class="font-serif text-xl sm:text-2xl font-semibold text-[var(--gold-pale)]">{{ $categoryData['name'] }}</h3>
+                                    <div class="w-12 h-px bg-[var(--gold)] mt-2 opacity-60"></div>
                                 </div>
                             </div>
 
@@ -639,34 +482,39 @@
                     @endforeach
                 </form>
 
-                <!-- Floating Cart Summary -->
-                <div id="cartSummary" class="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-[#2E1F1A] via-[#1a120f] to-[#2E1F1A] border-t-4 border-[#C69C6D] shadow-2xl p-3 sm:p-4 md:p-6 transform translate-y-full transition-transform duration-300 z-50">
-                    <div class="container mx-auto">
-                        <div class="flex items-center justify-between gap-2 sm:gap-4">
-                            <div class="flex items-center gap-3 sm:gap-6 md:gap-8">
-                                <div>
-                                    <div class="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
-                                        <span class="text-xl sm:text-2xl">🛒</span>
-                                        <p class="text-[#C69C6D] text-xs sm:text-sm font-bold uppercase tracking-wider">Total Pesanan</p>
+                    <!-- Floating Cart Summary -->
+                    <div id="cartSummary" class="fixed bottom-0 left-0 right-0 bg-[rgba(20,13,9,0.92)] border-t border-[rgba(184,146,74,0.35)] shadow-2xl p-3 sm:p-4 md:p-5 transform translate-y-full transition-transform duration-300 z-50">
+                        <div class="container mx-auto">
+                            <div class="flex items-center justify-between gap-3">
+                                <div class="flex items-center gap-4 sm:gap-8">
+                                    <div>
+                                        <div class="flex items-center gap-2 mb-0.5">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm text-[var(--gold)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+                                            </svg>
+                                            <p class="text-[var(--gold)] text-xs font-semibold uppercase tracking-widest">Total Pesanan</p>
+                                        </div>
+                                        <p class="text-xl sm:text-2xl md:text-3xl font-serif font-semibold gradient-gold" id="cartTotal">Rp 0</p>
                                     </div>
-                                    <p class="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-[#C69C6D] to-[#F5DEB3] bg-clip-text text-transparent" id="cartTotal">Rp 0</p>
+                                    <div class="h-10 w-px bg-[rgba(184,146,74,0.3)] hidden sm:block"></div>
+                                    <div class="hidden sm:block">
+                                        <p class="text-white/50 text-xs mb-0.5 uppercase tracking-widest">Item</p>
+                                        <p class="text-xl sm:text-2xl font-semibold text-white" id="cartCount">0</p>
+                                    </div>
                                 </div>
-                                <div class="h-10 sm:h-16 w-px bg-gradient-to-b from-[#C69C6D]/20 via-[#C69C6D] to-[#C69C6D]/20 hidden sm:block"></div>
-                                <div class="text-center hidden sm:block">
-                                    <p class="text-white text-xs sm:text-sm mb-1 font-bold uppercase tracking-wider">Total Item</p>
-                                    <p class="text-2xl sm:text-3xl md:text-4xl font-bold text-white" id="cartCount">0</p>
-                                </div>
+                                <button type="button" onclick="showCheckoutModal()"
+                                        class="inline-flex items-center gap-2 bg-[var(--gold)] hover:bg-[var(--gold-light)] text-[var(--black)] font-semibold py-2.5 px-5 sm:py-3 sm:px-7 rounded-full shadow-lg transform hover:scale-105 transition-all duration-200 text-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+                                    </svg>
+                                    <span class="hidden sm:inline">Lanjut ke Checkout</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                                    </svg>
+                                </button>
                             </div>
-                            <button type="button"
-                                    onclick="showCheckoutModal()"
-                                    class="bg-gradient-to-r from-[#C69C6D] to-[#D4AF7A] hover:from-[#D4AF7A] hover:to-[#C69C6D] text-[#121212] font-bold py-2 px-4 sm:py-3 sm:px-6 md:py-4 md:px-10 rounded-full shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2 sm:gap-3 text-sm sm:text-base">
-                                    <span class="text-lg sm:text-2xl">🛒</span>
-                                    <span class="hidden sm:inline text-lg font-bold">Lanjut ke Checkout</span>
-                                    <span class="text-xl">→</span>
-                            </button>
                         </div>
-                    </div>
-                </div>
+                    </div>       </div>
             </main>
         </div>
     </section>
@@ -723,37 +571,45 @@
                     </div>
 
                     <!-- Feature Cards -->
-                    <div class="grid grid-cols-2 gap-3 sm:gap-4 md:gap-6 mt-6 sm:mt-8 reveal-stagger">
-                        <div class="feature-card group relative bg-gradient-to-br from-premium-black/80 to-premium-black/40 p-4 sm:p-6 rounded-2xl border border-premium-gold/20 hover:border-premium-gold/40 transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-                            <div class="absolute inset-0 bg-gradient-to-br from-[#C69C6D]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="grid grid-cols-2 gap-3 sm:gap-4 mt-6 sm:mt-8 reveal-stagger">
+                        <div class="feature-card group relative bg-[rgba(14,12,10,0.7)] p-4 sm:p-5 rounded-2xl border border-[rgba(184,146,74,0.18)] hover:border-[rgba(184,146,74,0.4)] transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-br from-[rgba(184,146,74,0.08)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                             <div class="relative">
-                                <div class="text-3xl sm:text-4xl mb-2 sm:mb-3">⭐</div>
-                                <div class="text-lg sm:text-xl font-bold gradient-gold mb-1">Premium Quality</div>
-                                <div class="text-xs sm:text-sm text-white/80 font-medium">Kualitas terbaik</div>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon-lg text-[var(--gold)] mb-3 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+                                </svg>
+                                <div class="text-sm font-semibold text-[var(--gold-pale)] mb-0.5">Premium Quality</div>
+                                <div class="text-xs text-white/50">Kualitas terbaik</div>
                             </div>
                         </div>
-                        <div class="feature-card group relative bg-gradient-to-br from-premium-black/80 to-premium-black/40 p-4 sm:p-6 rounded-2xl border border-premium-gold/20 hover:border-premium-gold/40 transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-                            <div class="absolute inset-0 bg-gradient-to-br from-[#C69C6D]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div class="feature-card group relative bg-[rgba(14,12,10,0.7)] p-4 sm:p-5 rounded-2xl border border-[rgba(184,146,74,0.18)] hover:border-[rgba(184,146,74,0.4)] transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-br from-[rgba(184,146,74,0.08)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                             <div class="relative">
-                                <div class="text-3xl sm:text-4xl mb-2 sm:mb-3">👨‍🍳</div>
-                                <div class="text-lg sm:text-xl font-bold gradient-gold mb-1">Pro Barista</div>
-                                <div class="text-xs sm:text-sm text-white/80 font-medium">Ahli kopi</div>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon-lg text-[var(--gold)] mb-3 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                                </svg>
+                                <div class="text-sm font-semibold text-[var(--gold-pale)] mb-0.5">Pro Barista</div>
+                                <div class="text-xs text-white/50">Ahli kopi pilihan</div>
                             </div>
                         </div>
-                        <div class="feature-card group relative bg-gradient-to-br from-premium-black/80 to-premium-black/40 p-4 sm:p-6 rounded-2xl border border-premium-gold/20 hover:border-premium-gold/40 transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-                            <div class="absolute inset-0 bg-gradient-to-br from-[#C69C6D]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div class="feature-card group relative bg-[rgba(14,12,10,0.7)] p-4 sm:p-5 rounded-2xl border border-[rgba(184,146,74,0.18)] hover:border-[rgba(184,146,74,0.4)] transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-br from-[rgba(184,146,74,0.08)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                             <div class="relative">
-                                <div class="text-3xl sm:text-4xl mb-2 sm:mb-3">🌿</div>
-                                <div class="text-lg sm:text-xl font-bold gradient-gold mb-1">Fresh</div>
-                                <div class="text-xs sm:text-sm text-white/80 font-medium">Bahan segar</div>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon-lg text-[var(--gold)] mb-3 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                                </svg>
+                                <div class="text-sm font-semibold text-[var(--gold-pale)] mb-0.5">Fresh Daily</div>
+                                <div class="text-xs text-white/50">Bahan segar setiap hari</div>
                             </div>
                         </div>
-                        <div class="feature-card group relative bg-gradient-to-br from-premium-black/80 to-premium-black/40 p-4 sm:p-6 rounded-2xl border border-premium-gold/20 hover:border-premium-gold/40 transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-                            <div class="absolute inset-0 bg-gradient-to-br from-[#C69C6D]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div class="feature-card group relative bg-[rgba(14,12,10,0.7)] p-4 sm:p-5 rounded-2xl border border-[rgba(184,146,74,0.18)] hover:border-[rgba(184,146,74,0.4)] transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-br from-[rgba(184,146,74,0.08)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                             <div class="relative">
-                                <div class="text-3xl sm:text-4xl mb-2 sm:mb-3">⚡</div>
-                                <div class="text-lg sm:text-xl font-bold gradient-gold mb-1">Fast</div>
-                                <div class="text-xs sm:text-sm text-white/80 font-medium">Pelayanan cepat</div>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon-lg text-[var(--gold)] mb-3 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                                </svg>
+                                <div class="text-sm font-semibold text-[var(--gold-pale)] mb-0.5">Fast Service</div>
+                                <div class="text-xs text-white/50">Pelayanan cepat</div>
                             </div>
                         </div>
                     </div>
@@ -803,7 +659,9 @@
                     <!-- Instagram -->
                     <a href="https://instagram.com/ngopigo" target="_blank"
                        class="social-card group flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-purple-900/50 to-pink-900/50 hover:from-purple-800/70 hover:to-pink-800/70 px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-premium-gold/30 hover:border-premium-gold transition-all duration-300 transform hover:-translate-y-1">
-                        <div class="text-2xl sm:text-3xl">📷</div>
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0">
+                            <svg style="width:18px;height:18px" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                        </div>
                         <div class="text-left hidden sm:block">
                             <div class="text-white font-bold">Instagram</div>
                             <div class="text-premium-gold text-sm">@ngopigo</div>
@@ -813,7 +671,9 @@
                     <!-- Facebook -->
                     <a href="https://facebook.com/ngopigo" target="_blank"
                        class="social-card group flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-blue-900/50 to-blue-800/50 hover:from-blue-800/70 hover:to-blue-700/70 px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-premium-gold/30 hover:border-premium-gold transition-all duration-300 transform hover:-translate-y-1">
-                        <div class="text-2xl sm:text-3xl">📘</div>
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center flex-shrink-0">
+                            <svg style="width:18px;height:18px" fill="white" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+                        </div>
                         <div class="text-left hidden sm:block">
                             <div class="text-white font-bold">Facebook</div>
                             <div class="text-premium-gold text-sm">NgopiGo</div>
@@ -823,7 +683,9 @@
                     <!-- TikTok -->
                     <a href="https://tiktok.com/@ngopigo" target="_blank"
                        class="social-card group flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-gray-900/50 to-gray-800/50 hover:from-gray-800/70 hover:to-gray-700/70 px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-premium-gold/30 hover:border-premium-gold transition-all duration-300 transform hover:-translate-y-1">
-                        <div class="text-2xl sm:text-3xl">🎵</div>
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-gray-700 to-black flex items-center justify-center flex-shrink-0">
+                            <svg style="width:18px;height:18px" fill="white" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.77.22 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 00-.79-.05 6.34 6.34 0 000 12.68 6.34 6.34 0 006.33-6.34V8.69a8.17 8.17 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"/></svg>
+                        </div>
                         <div class="text-left hidden sm:block">
                             <div class="text-white font-bold">TikTok</div>
                             <div class="text-premium-gold text-sm">@ngopigo</div>
@@ -833,7 +695,9 @@
                     <!-- WhatsApp -->
                     <a href="https://wa.me/6281234567890" target="_blank"
                        class="social-card group flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-green-900/50 to-green-800/50 hover:from-green-800/70 hover:to-green-700/70 px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border border-premium-gold/30 hover:border-premium-gold transition-all duration-300 transform hover:-translate-y-1">
-                        <div class="text-2xl sm:text-3xl">💬</div>
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center flex-shrink-0">
+                            <svg style="width:18px;height:18px" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.998 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.978-1.405A9.96 9.96 0 0011.998 22C17.52 22 22 17.523 22 12S17.52 2 11.998 2zm0 18c-1.66 0-3.21-.476-4.524-1.3l-.323-.19-3.35.944.95-3.265-.21-.335A8 8 0 013.998 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
+                        </div>
                         <div class="text-left hidden sm:block">
                             <div class="text-white font-bold">WhatsApp</div>
                             <div class="text-premium-gold text-sm">+62 812-3456-7890</div>
@@ -859,9 +723,9 @@
                 <div class="footer-content text-center">
                     <h4 class="text-base sm:text-lg font-bold text-white mb-3 sm:mb-4">Kontak Kami</h4>
                     <div class="space-y-2">
-                        <p class="text-white/70 text-xs sm:text-sm font-medium">📍 Jakarta, Indonesia</p>
-                        <p class="text-white/70 text-xs sm:text-sm font-medium">📧 hello@ngopigo.com</p>
-                        <p class="text-white/70 text-xs sm:text-sm font-medium">📱 +62 812-3456-7890</p>
+                        <p class="text-white/70 text-xs sm:text-sm font-medium flex items-center justify-center gap-1.5"><svg style="width:13px;height:13px;flex-shrink:0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg> Jakarta, Indonesia</p>
+                        <p class="text-white/70 text-xs sm:text-sm font-medium flex items-center justify-center gap-1.5"><svg style="width:13px;height:13px;flex-shrink:0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg> hello@ngopigo.com</p>
+                        <p class="text-white/70 text-xs sm:text-sm font-medium flex items-center justify-center gap-1.5"><svg style="width:13px;height:13px;flex-shrink:0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18h3"/></svg> +62 812-3456-7890</p>
                     </div>
                 </div>
 
@@ -869,21 +733,17 @@
                 <div class="footer-content text-center sm:text-right">
                     <h4 class="text-base sm:text-lg font-bold text-white mb-3 sm:mb-4">Follow Us</h4>
                     <div class="flex justify-center sm:justify-end gap-3 sm:gap-4">
-                        <a href="https://instagram.com/ngopigo" target="_blank"
-                           class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white text-lg sm:text-xl hover:scale-110 transition-transform shadow-lg">
-                            📷
+                        <a href="https://instagram.com/ngopigo" target="_blank" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
+                            <svg style="width:17px;height:17px" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
                         </a>
-                        <a href="https://facebook.com/ngopigo" target="_blank"
-                           class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center text-white text-lg sm:text-xl hover:scale-110 transition-transform shadow-lg">
-                            📘
+                        <a href="https://facebook.com/ngopigo" target="_blank" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
+                            <svg style="width:17px;height:17px" fill="white" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
                         </a>
-                        <a href="https://tiktok.com/@ngopigo" target="_blank"
-                           class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-gray-700 to-black flex items-center justify-center text-white text-lg sm:text-xl hover:scale-110 transition-transform shadow-lg">
-                            🎵
+                        <a href="https://tiktok.com/@ngopigo" target="_blank" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-gray-700 to-black flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
+                            <svg style="width:17px;height:17px" fill="white" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.77.22 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 00-.79-.05 6.34 6.34 0 000 12.63 6.34 6.34 0 006.33-6.34V8.69a8.17 8.17 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"/></svg>
                         </a>
-                        <a href="https://wa.me/6281234567890" target="_blank"
-                           class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-green-600 to-green-800 flex items-center justify-center text-white text-lg sm:text-xl hover:scale-110 transition-transform shadow-lg">
-                            💬
+                        <a href="https://wa.me/6281234567890" target="_blank" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
+                            <svg style="width:17px;height:17px" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.978-1.405A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18c-1.66 0-3.21-.476-4.524-1.3l-.323-.19-3.35.944.95-3.265-.21-.335A8 8 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
                         </a>
                     </div>
                 </div>
@@ -905,128 +765,124 @@
     </footer>
 
     <!-- Checkout Modal -->
-    <div id="checkoutModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
-        <div class="bg-gradient-to-br from-[#2E1F1A] to-[#1a120f] rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-xl sm:max-w-2xl my-4 sm:my-8 max-h-[95vh] overflow-y-auto border-2 border-[#C69C6D]/40">
+    <div id="checkoutModal" class="fixed inset-0 bg-[rgba(0,0,0,0.88)] backdrop-blur-md z-50 hidden flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
+        <div class="bg-[var(--dark-brown)] rounded-2xl shadow-2xl w-full max-w-xl sm:max-w-2xl my-4 sm:my-8 max-h-[95vh] overflow-y-auto border border-[rgba(184,146,74,0.3)]">
             <!-- Modal Header -->
-            <div class="bg-gradient-to-r from-[#C69C6D] to-[#D4AF7A] text-[#121212] px-4 sm:px-6 md:px-8 py-4 sm:py-5 md:py-6 rounded-t-2xl sm:rounded-t-3xl flex items-center justify-between sticky top-0 z-10">
-                <h2 class="text-lg sm:text-xl md:text-2xl font-bold flex items-center gap-2 sm:gap-3">
-                    <span class="text-2xl sm:text-3xl">📝</span>
-                    <span>Checkout Pesanan</span>
+            <div class="bg-[var(--gold)] text-[var(--black)] px-5 sm:px-7 py-4 rounded-t-2xl flex items-center justify-between sticky top-0 z-10">
+                <h2 class="font-serif text-lg sm:text-xl font-semibold flex items-center gap-2.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V19.5a2.25 2.25 0 002.25 2.25h.75M6.75 21h9" />
+                    </svg>
+                    Checkout Pesanan
                 </h2>
-                <button type="button" onclick="hideCheckoutModal()" class="text-[#121212] hover:text-white text-2xl sm:text-3xl font-bold transition-colors w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full hover:bg-white/20">
-                    &times;
-                </button>
+                <button type="button" onclick="hideCheckoutModal()" class="text-[var(--black)] hover:text-white text-2xl font-bold transition-colors w-9 h-9 flex items-center justify-center rounded-full hover:bg-black/20">&times;</button>
             </div>
 
             <!-- Modal Body -->
-            <div class="p-4 sm:p-6 md:p-8">
+            <div class="p-5 sm:p-7">
                 <form action="{{ route('order.store') }}" method="POST" id="checkoutForm">
                     @csrf
                     <input type="hidden" name="table_number" value="{{ $tableNumber }}">
 
                     <!-- Order Summary -->
-                    <div class="bg-[#121212]/80 rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6 border-2 border-[#C69C6D]/30">
-                        <h3 class="font-bold text-[#C69C6D] mb-3 sm:mb-4 text-base sm:text-lg flex items-center gap-2">
-                            <span class="text-xl sm:text-2xl">🛒</span>
-                            <span>Ringkasan Pesanan</span>
+                    <div class="bg-[rgba(0,0,0,0.3)] rounded-xl p-4 sm:p-5 mb-5 border border-[rgba(184,146,74,0.2)]">
+                        <h3 class="font-semibold text-[var(--gold)] mb-3 text-sm flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+                            </svg>
+                            Ringkasan Pesanan
                         </h3>
-                        <div id="checkoutItems" class="space-y-2 sm:space-y-3">
-                            <!-- Items populated by JS -->
-                        </div>
-                        <div class="relative mt-4 sm:mt-6 pt-4 sm:pt-6">
-                            <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#C69C6D]/60 to-transparent"></div>
-                            <div class="flex justify-between items-center">
-                                <span class="font-bold text-white text-base sm:text-lg tracking-wide">Total Bayar</span>
-                                <span class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-[#C69C6D] to-[#F5DEB3] bg-clip-text text-transparent tracking-tight" id="checkoutTotal">Rp 0</span>
+                        <div id="checkoutItems" class="space-y-2 sm:space-y-3"></div>
+                        <div class="relative mt-4 pt-4">
+                            <div class="gold-line"></div>
+                            <div class="flex justify-between items-center mt-4">
+                                <span class="font-semibold text-white text-sm tracking-wide">Total Bayar</span>
+                                <span class="font-serif text-2xl sm:text-3xl font-semibold gradient-gold" id="checkoutTotal">Rp 0</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Customer Information -->
-                    <div class="mb-4 sm:mb-6">
-                        <h3 class="font-bold text-white mb-3 sm:mb-4 text-base sm:text-lg flex items-center gap-2">
-                            <span class="text-xl sm:text-2xl">👤</span>
-                            <span>Informasi Customer</span>
+                    <div class="mb-5">
+                        <h3 class="font-semibold text-white/80 mb-3 text-sm flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                            </svg>
+                            Informasi Customer
                         </h3>
-                        <div class="space-y-3 sm:space-y-4">
+                        <div class="space-y-3">
                             <div>
-                                <label for="customer_name" class="block text-xs sm:text-sm font-medium text-gray-300 mb-1 sm:mb-2">Nama Panggilan Antrian <span class="text-[#C69C6D]">*</span></label>
-                                <input type="text"
-                                       name="customer_name"
-                                       id="customer_name"
-                                       required
-                                       class="w-full px-3 sm:px-4 py-2 sm:py-3 bg-[#121212]/60 border-2 border-[#C69C6D]/30 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-[#C69C6D] focus:border-transparent transition text-white placeholder-gray-500 text-sm sm:text-base"
+                                <label for="customer_name" class="block text-xs font-medium text-white/60 mb-1.5">Nama Panggilan <span class="text-[var(--gold)]">*</span></label>
+                                <input type="text" name="customer_name" id="customer_name" required
+                                       class="w-full px-4 py-2.5 bg-[rgba(0,0,0,0.3)] border border-[rgba(184,146,74,0.25)] rounded-xl focus:ring-1 focus:ring-[var(--gold)] focus:border-[var(--gold)] transition text-white placeholder-white/30 text-sm outline-none"
                                        placeholder="Masukkan nama panggilan">
                             </div>
                             <div>
-                                <label for="phone" class="block text-xs sm:text-sm font-medium text-gray-300 mb-1 sm:mb-2">Nomor WhatsApp <span class="text-[#C69C6D]">*</span></label>
-                                <input type="tel"
-                                       name="phone"
-                                       id="phone"
-                                       required
-                                       class="w-full px-3 sm:px-4 py-2 sm:py-3 bg-[#121212]/60 border-2 border-[#C69C6D]/30 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-[#C69C6D] focus:border-transparent transition text-white placeholder-gray-500 text-sm sm:text-base"
+                                <label for="phone" class="block text-xs font-medium text-white/60 mb-1.5">Nomor WhatsApp <span class="text-[var(--gold)]">*</span></label>
+                                <input type="tel" name="phone" id="phone" required
+                                       class="w-full px-4 py-2.5 bg-[rgba(0,0,0,0.3)] border border-[rgba(184,146,74,0.25)] rounded-xl focus:ring-1 focus:ring-[var(--gold)] focus:border-[var(--gold)] transition text-white placeholder-white/30 text-sm outline-none"
                                        placeholder="08123456789">
                             </div>
                         </div>
                     </div>
 
                     <!-- Order Notes -->
-                    <div class="mb-4 sm:mb-6">
-                        <h3 class="font-bold text-white mb-3 sm:mb-4 text-base sm:text-lg flex items-center gap-2">
-                            <span class="text-xl sm:text-2xl">📝</span>
-                            <span>Catatan Pesanan</span>
+                    <div class="mb-5">
+                        <h3 class="font-semibold text-white/80 mb-3 text-sm flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                            </svg>
+                            Catatan Pesanan
                         </h3>
-                        <textarea name="notes"
-                                  id="notes"
-                                  rows="2 sm:rows-3"
-                                  class="w-full px-3 sm:px-4 py-2 sm:py-3 bg-[#121212]/60 border-2 border-[#C69C6D]/30 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-[#C69C6D] focus:border-transparent transition text-white placeholder-gray-500 text-sm sm:text-base"
-                                  placeholder="Contoh: Jangan terlalu manis, kurang es batu, dll"></textarea>
+                        <textarea name="notes" id="notes" rows="3"
+                                  class="w-full px-4 py-2.5 bg-[rgba(0,0,0,0.3)] border border-[rgba(184,146,74,0.25)] rounded-xl focus:ring-1 focus:ring-[var(--gold)] focus:border-[var(--gold)] transition text-white placeholder-white/30 text-sm outline-none resize-none"
+                                  placeholder="Contoh: Kurang manis, tanpa es, dll"></textarea>
                     </div>
 
                     <!-- Payment Method -->
-                    <div class="mb-4 sm:mb-6 md:mb-8">
-                        <h3 class="font-bold text-white mb-3 sm:mb-4 text-base sm:text-lg flex items-center gap-2">
-                            <span class="text-xl sm:text-2xl">💳</span>
-                            <span>Metode Pembayaran</span>
+                    <div class="mb-6">
+                        <h3 class="font-semibold text-white/80 mb-3 text-sm flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
+                            </svg>
+                            Metode Pembayaran
                         </h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                        <div class="grid grid-cols-2 gap-3">
                             <label class="relative cursor-pointer">
-                                <input type="radio"
-                                       name="payment_method"
-                                       value="cod"
-                                       checked
-                                       class="peer sr-only">
-                                <div class="bg-[#121212]/60 border-2 border-[#C69C6D]/30 rounded-xl sm:rounded-2xl p-4 sm:p-5 peer-checked:border-[#C69C6D] peer-checked:bg-[#C69C6D]/10 transition-all hover:border-[#C69C6D]/50">
-                                    <div class="text-2xl sm:text-3xl mb-1 sm:mb-2">💵</div>
-                                    <div class="font-bold text-white text-sm sm:text-base">Bayar di Tempat</div>
-                                    <div class="text-xs sm:text-sm text-gray-400">COD - Cash on Delivery</div>
+                                <input type="radio" name="payment_method" value="cod" checked class="peer sr-only">
+                                <div class="bg-[rgba(0,0,0,0.25)] border border-[rgba(184,146,74,0.25)] rounded-xl p-4 peer-checked:border-[var(--gold)] peer-checked:bg-[rgba(184,146,74,0.1)] transition-all hover:border-[rgba(184,146,74,0.45)]">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon-md text-[var(--gold)] mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
+                                    </svg>
+                                    <div class="font-semibold text-white text-sm">Bayar di Tempat</div>
+                                    <div class="text-xs text-white/50 mt-0.5">COD</div>
                                 </div>
                             </label>
                             <label class="relative cursor-pointer">
-                                <input type="radio"
-                                       name="payment_method"
-                                       value="online"
-                                       class="peer sr-only">
-                                <div class="bg-[#121212]/60 border-2 border-[#C69C6D]/30 rounded-xl sm:rounded-2xl p-4 sm:p-5 peer-checked:border-[#C69C6D] peer-checked:bg-[#C69C6D]/10 transition-all hover:border-[#C69C6D]/50">
-                                    <div class="text-2xl sm:text-3xl mb-1 sm:mb-2">💳</div>
-                                    <div class="font-bold text-white text-sm sm:text-base">Bayar Online</div>
-                                    <div class="text-xs sm:text-sm text-gray-400">Transfer Bank / E-Wallet</div>
+                                <input type="radio" name="payment_method" value="online" class="peer sr-only">
+                                <div class="bg-[rgba(0,0,0,0.25)] border border-[rgba(184,146,74,0.25)] rounded-xl p-4 peer-checked:border-[var(--gold)] peer-checked:bg-[rgba(184,146,74,0.1)] transition-all hover:border-[rgba(184,146,74,0.45)]">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon-md text-[var(--gold)] mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
+                                    </svg>
+                                    <div class="font-semibold text-white text-sm">Bayar Online</div>
+                                    <div class="text-xs text-white/50 mt-0.5">Transfer / E-Wallet</div>
                                 </div>
                             </label>
                         </div>
                     </div>
 
                     <!-- Submit Button -->
-                    <div class="flex gap-2 sm:gap-4">
-                        <button type="button"
-                                onclick="hideCheckoutModal()"
-                                class="px-4 sm:px-6 py-2 sm:py-4 border-2 border-[#C69C6D]/30 text-gray-300 font-bold rounded-xl hover:bg-[#C69C6D]/10 hover:border-[#C69C6D] transition text-center text-sm sm:text-base">
+                    <div class="flex gap-3">
+                        <button type="button" onclick="hideCheckoutModal()"
+                                class="px-5 py-3 border border-[rgba(184,146,74,0.3)] text-white/60 font-medium rounded-xl hover:bg-[rgba(184,146,74,0.08)] hover:border-[var(--gold)] hover:text-white transition text-sm">
                             Kembali
                         </button>
                         <button type="submit"
-                                class="flex-1 bg-gradient-to-r from-[#C69C6D] to-[#D4AF7A] hover:from-[#D4AF7A] hover:to-[#C69C6D] text-[#121212] font-bold py-2 sm:py-3 md:py-4 px-4 sm:px-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2 text-sm sm:text-base">
-                            <span class="text-xl sm:text-2xl">✅</span>
-                            <span>Buat Pesanan</span>
+                                class="flex-1 inline-flex items-center justify-center gap-2 bg-[var(--gold)] hover:bg-[var(--gold-light)] text-[var(--black)] font-semibold py-3 px-5 rounded-xl shadow-lg transform hover:scale-[1.02] transition-all duration-200 text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Buat Pesanan
                         </button>
                     </div>
                 </form>
@@ -1215,13 +1071,17 @@
             btn.addEventListener('click', function() {
                 const category = this.dataset.category;
                 
-                // Update active button
+                // Update active button styles
                 document.querySelectorAll('.category-btn').forEach(b => {
-                    b.classList.remove('bg-premium-gold', 'text-premium-black', 'border-premium-gold');
-                    b.classList.add('bg-premium-black/50', 'text-premium-gold', 'border-premium-gold/30');
+                    b.style.backgroundColor = 'transparent';
+                    b.style.color = 'var(--gold)';
+                    b.style.borderColor = 'rgba(184,146,74,0.3)';
+                    b.style.fontWeight = '500';
                 });
-                this.classList.remove('bg-premium-black/50', 'text-premium-gold', 'border-premium-gold/30');
-                this.classList.add('bg-premium-gold', 'text-premium-black', 'border-premium-gold');
+                this.style.backgroundColor = 'var(--gold)';
+                this.style.color = 'var(--black)';
+                this.style.borderColor = 'var(--gold)';
+                this.style.fontWeight = '600';
                 
                 // Filter products
                 document.querySelectorAll('.category-section').forEach(section => {
