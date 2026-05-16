@@ -422,7 +422,7 @@
                                 <div class="product-card premium-card gold-border-animate bg-premium-brown/50 rounded-2xl overflow-hidden border border-premium-gold/20 cursor-pointer relative group flex flex-col h-full"
                                      data-product-id="{{ $product->id }}"
                                      data-product-name="{{ $product->name }}"
-                                     data-product-price="{{ $product->price }}"
+                                     data-product-price="{{ $product->final_price }}"
                                      data-category="{{ $categoryKey }}">
                                     <!-- Product Image Container - Fixed Square -->
                                     @if($product->image)
@@ -449,7 +449,14 @@
                                         </div>
 
                                         <div class="relative flex items-center justify-between mt-3 pt-3 border-t border-premium-gold/20">
+                                            @if($product->discount_price && $product->discount_price > 0)
+                                            <div class="flex flex-col">
+                                                <span class="text-[10px] sm:text-xs text-white/50 line-through decoration-red-500/70">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
+                                                <span class="text-sm sm:text-base md:text-lg font-bold gradient-gold">Rp {{ number_format($product->discount_price, 0, ',', '.') }}</span>
+                                            </div>
+                                            @else
                                             <span class="text-sm sm:text-base md:text-lg font-bold gradient-gold">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
+                                            @endif
                                             <div class="flex items-center gap-1 sm:gap-1.5">
                                                 <button type="button"
                                                         class="btn-minus w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-premium-black/50 hover:bg-premium-gold/20 border border-premium-gold/30 flex items-center justify-center font-bold text-premium-gold transition-all text-sm sm:text-base flex-shrink-0"
@@ -978,7 +985,8 @@
                 if (qty > 0) {
                     const product = products.find(p => p.id == productId);
                     if (product) {
-                        total += product.price * qty;
+                        const finalPrice = product.discount_price && product.discount_price > 0 ? product.discount_price : product.price;
+                        total += finalPrice * qty;
                         count += qty;
                     }
                 }
@@ -1003,7 +1011,8 @@
                 if (qty > 0) {
                     const product = products.find(p => p.id == productId);
                     if (product) {
-                        const subtotal = product.price * qty;
+                        const finalPrice = product.discount_price && product.discount_price > 0 ? product.discount_price : product.price;
+                        const subtotal = finalPrice * qty;
                         total += subtotal;
                         itemsHtml += `
                             <div class="flex justify-between items-center p-3 sm:p-4 bg-gradient-to-r from-[#1a120f] to-[#121212] rounded-xl sm:rounded-2xl border border-[#C69C6D]/30 shadow-lg">

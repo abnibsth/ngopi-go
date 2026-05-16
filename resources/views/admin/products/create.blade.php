@@ -83,26 +83,28 @@
                         @enderror
                     </div>
 
-                    <!-- Category and Price -->
+                    <!-- Category -->
+                    <div class="mb-6">
+                        <label for="category" class="block text-sm font-medium text-[#F5F0E6] mb-2">Kategori <span class="text-[#f87171]">*</span></label>
+                        <select name="category"
+                                id="category"
+                                required
+                                class="w-full px-4 py-3 border-2 border-[#C69C6D]/30 rounded-lg bg-[#2E1F1A] text-[#F5F0E6] focus:ring-2 focus:ring-[#C69C6D] focus:border-transparent transition @error('category') border-[#f87171] @enderror">
+                            <option value="">Pilih Kategori</option>
+                            <option value="coffee" {{ old('category') === 'coffee' ? 'selected' : '' }}>☕ Kopi</option>
+                            <option value="non-coffee" {{ old('category') === 'non-coffee' ? 'selected' : '' }}>🍵 Non Kopi</option>
+                            <option value="food" {{ old('category') === 'food' ? 'selected' : '' }}>🍛 Makanan</option>
+                            <option value="snack" {{ old('category') === 'snack' ? 'selected' : '' }}>🍟 Snack</option>
+                        </select>
+                        @error('category')
+                        <p class="text-[#f87171] text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Prices -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                         <div>
-                            <label for="category" class="block text-sm font-medium text-[#F5F0E6] mb-2">Kategori <span class="text-[#f87171]">*</span></label>
-                            <select name="category"
-                                    id="category"
-                                    required
-                                    class="w-full px-4 py-3 border-2 border-[#C69C6D]/30 rounded-lg bg-[#2E1F1A] text-[#F5F0E6] focus:ring-2 focus:ring-[#C69C6D] focus:border-transparent transition @error('category') border-[#f87171] @enderror">
-                                <option value="">Pilih Kategori</option>
-                                <option value="coffee" {{ old('category') === 'coffee' ? 'selected' : '' }}>☕ Kopi</option>
-                                <option value="non-coffee" {{ old('category') === 'non-coffee' ? 'selected' : '' }}>🍵 Non Kopi</option>
-                                <option value="food" {{ old('category') === 'food' ? 'selected' : '' }}>🍛 Makanan</option>
-                                <option value="snack" {{ old('category') === 'snack' ? 'selected' : '' }}>🍟 Snack</option>
-                            </select>
-                            @error('category')
-                            <p class="text-[#f87171] text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-                        <div>
-                            <label for="price" class="block text-sm font-medium text-[#F5F0E6] mb-2">Harga (Rp) <span class="text-[#f87171]">*</span></label>
+                            <label for="price" class="block text-sm font-medium text-[#F5F0E6] mb-2">Harga Asli (Rp) <span class="text-[#f87171]">*</span></label>
                             <input type="number"
                                    name="price"
                                    id="price"
@@ -112,6 +114,19 @@
                                    class="w-full px-4 py-3 border-2 border-[#C69C6D]/30 rounded-lg bg-[#2E1F1A] text-[#F5F0E6] placeholder-[#C69C6D]/50 focus:ring-2 focus:ring-[#C69C6D] focus:border-transparent transition @error('price') border-[#f87171] @enderror"
                                    placeholder="25000">
                             @error('price')
+                            <p class="text-[#f87171] text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label for="discount_price" class="block text-sm font-medium text-[#F5F0E6] mb-2">Harga Diskon (Opsional, Rp)</label>
+                            <input type="number"
+                                   name="discount_price"
+                                   id="discount_price"
+                                   value="{{ old('discount_price') }}"
+                                   min="0"
+                                   class="w-full px-4 py-3 border-2 border-[#C69C6D]/30 rounded-lg bg-[#2E1F1A] text-[#F5F0E6] placeholder-[#C69C6D]/50 focus:ring-2 focus:ring-[#C69C6D] focus:border-transparent transition @error('discount_price') border-[#f87171] @enderror"
+                                   placeholder="20000">
+                            @error('discount_price')
                             <p class="text-[#f87171] text-sm mt-1">{{ $message }}</p>
                             @enderror
                         </div>

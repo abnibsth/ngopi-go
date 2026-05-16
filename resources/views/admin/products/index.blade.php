@@ -106,7 +106,14 @@
                         </span>
                     </td>
                     <td class="px-5 py-4 border-b border-[rgba(184,146,74,0.05)] whitespace-nowrap">
-                        <span class="font-bold gradient-gold">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
+                        @if($product->discount_price && $product->discount_price > 0)
+                            <div class="flex flex-col">
+                                <span class="text-xs text-white/40 line-through decoration-red-500/50 decoration-2">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
+                                <span class="font-bold gradient-gold">Rp {{ number_format($product->discount_price, 0, ',', '.') }}</span>
+                            </div>
+                        @else
+                            <span class="font-bold gradient-gold">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
+                        @endif
                     </td>
                     <td class="px-5 py-4 border-b border-[rgba(184,146,74,0.05)] whitespace-nowrap">
                         <span class="status-pill
