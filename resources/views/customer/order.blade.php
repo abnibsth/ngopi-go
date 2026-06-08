@@ -8,7 +8,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         /* Custom Premium Colors */
         :root {
@@ -25,9 +25,11 @@
         * { box-sizing: border-box; }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Outfit', sans-serif;
             background-color: var(--black);
             color: var(--cream);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         h1, h2, h3, .font-serif {
@@ -62,7 +64,7 @@
         
         /* Gradient Text */
         .gradient-gold {
-            background: linear-gradient(120deg, #b8924a 0%, #e8d5b0 45%, #c4a265 100%);
+            background: linear-gradient(120deg, #d4af7a 0%, #e8d5b0 45%, #b8924a 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -70,14 +72,14 @@
         
         /* Premium Card */
         .premium-card {
-            transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                        box-shadow 0.35s ease,
-                        border-color 0.3s ease;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                        box-shadow 0.4s ease,
+                        border-color 0.4s ease;
         }
         .premium-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 18px 36px rgba(184,146,74,0.18), 0 4px 12px rgba(0,0,0,0.4);
-            border-color: rgba(184,146,74,0.5);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(184,146,74,0.1), 0 4px 12px rgba(0,0,0,0.5);
+            border-color: rgba(184,146,74,0.4);
         }
         
         /* Subtle inner glow on hover */
@@ -199,9 +201,9 @@
         /* Qty button */
         .qty-btn {
             display: flex; align-items: center; justify-content: center;
-            transition: background-color .2s ease, transform .15s ease;
+            transition: background-color .3s cubic-bezier(0.16, 1, 0.3, 1), transform .2s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .qty-btn:active { transform: scale(0.88); }
+        .qty-btn:active { transform: scale(0.95); }
 
         /* Nav bar floating */
         #topNav {
@@ -228,9 +230,10 @@
 </head>
 <body class="bg-premium-black text-cream min-h-screen">
     <!-- Hero Section with Slider -->
-    <section class="relative h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden">
+    <section class="relative min-h-[90dvh] flex items-center overflow-hidden">
         <!-- Background Overlay -->
-        <div class="absolute inset-0 bg-gradient-to-b from-premium-black/80 via-premium-black/50 to-premium-black z-10"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-premium-black/95 via-premium-black/60 to-transparent z-10"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-premium-black/40 via-transparent to-premium-black z-10"></div>
         
         <!-- Sliding Images -->
         <div class="absolute inset-0">
@@ -257,42 +260,29 @@
         </div>
         
         <!-- Hero Content -->
-        <div class="relative z-20 container mx-auto px-4 h-full flex items-center">
-            <div class="max-w-3xl">
+        <div class="relative z-20 container mx-auto px-4 lg:px-12 h-full flex items-center pt-24 pb-12">
+            <div class="max-w-2xl">
                 <!-- Badge -->
-                <div class="inline-flex items-center gap-2 mb-5 px-5 py-2 border border-[rgba(184,146,74,0.4)] rounded-full bg-[rgba(30,20,16,0.5)] backdrop-blur-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm text-premium-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15M14.25 3.104c.251.023.501.05.75.082M19.8 15a2.25 2.25 0 01-2.15 1.5H6.35A2.25 2.25 0 014.2 15M19.8 15v-3M4.2 15v-3" />
-                    </svg>
-                    <span class="text-[var(--gold-pale)] text-xs font-medium tracking-widest uppercase">Premium Coffee Experience</span>
+                <div class="inline-flex items-center gap-3 mb-8 px-4 py-1.5 border-l-2 border-premium-gold bg-premium-black/20 backdrop-blur-md">
+                    <span class="text-premium-gold text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase">Premium Selection</span>
                 </div>
 
-                <h1 class="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold mb-4 md:mb-6 leading-[1.1]">
-                    <span class="gradient-gold">NgopiGo</span><br>
-                    <span class="text-white text-2xl sm:text-3xl md:text-4xl lg:text-[2.8rem] font-light tracking-wide">Taste the Excellence</span>
+                <h1 class="font-serif text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold mb-6 leading-[1.05] tracking-tight">
+                    <span class="text-white">Taste</span><br>
+                    <span class="text-white/80 italic font-light">the</span> <span class="gradient-gold">Excellence</span>
                 </h1>
 
-                <p class="text-sm sm:text-base md:text-lg text-white/75 mb-7 md:mb-10 leading-relaxed max-w-xl font-light">
-                    Nikmati setiap tegukan kopi premium dari biji pilihan terbaik,<br class="hidden sm:block"> langsung ke cangkir Anda.
+                <p class="text-base sm:text-lg text-white/70 mb-10 leading-relaxed max-w-lg font-light tracking-wide">
+                    A curated collection of the finest coffee beans, roasted to perfection and crafted with passion. Experience the true essence of premium coffee.
                 </p>
 
-                <div class="flex flex-wrap gap-3">
+                <div class="flex flex-wrap gap-4">
                     <a href="#menu" onclick="smoothScrollTo('menu')"
-                       class="group inline-flex items-center gap-2 bg-[var(--gold)] hover:bg-[var(--gold-light)] text-[var(--black)] font-semibold py-3 px-7 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg text-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+                       class="group inline-flex items-center gap-3 bg-white text-premium-black font-semibold py-4 px-8 rounded-full transition-transform duration-400 transform hover:scale-[0.98] shadow-[0_0_40px_rgba(255,255,255,0.1)] text-sm tracking-wide">
+                        View Menu
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                         </svg>
-                        Pesan Sekarang
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                        </svg>
-                    </a>
-                    <a href="#about" onclick="smoothScrollTo('about')"
-                       class="inline-flex items-center gap-2 border border-[rgba(184,146,74,0.45)] hover:border-[var(--gold)] text-[var(--gold)] hover:bg-[rgba(184,146,74,0.08)] font-medium py-3 px-7 rounded-full transition-all duration-300 text-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-                        </svg>
-                        Tentang Kami
                     </a>
                 </div>
 
@@ -341,41 +331,30 @@
             <!-- Category Filter -->
             <div id="topNav" class="mb-8 md:mb-12">
                 <div class="container mx-auto px-4">
-                    <div class="flex gap-2 overflow-x-auto scrollbar-hide py-3" id="categoryFilter">
+                    <div class="flex gap-6 overflow-x-auto scrollbar-hide py-4 border-b border-white/5" id="categoryFilter">
                         <button type="button" data-category="all"
-                                class="category-btn flex-shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-250 bg-[var(--gold)] text-[var(--black)] border border-[var(--gold)]">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
-                            </svg>
-                            Semua
+                                class="category-btn relative flex-shrink-0 inline-flex items-center gap-2 pb-3 text-sm font-medium transition-colors text-white">
+                            <span class="absolute bottom-0 left-0 w-full h-[2px] bg-premium-gold scale-x-100 transition-transform origin-left"></span>
+                            All
                         </button>
                         <button type="button" data-category="coffee"
-                                class="category-btn flex-shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-250 bg-transparent text-[var(--gold)] border border-[rgba(184,146,74,0.3)] hover:border-[var(--gold)]">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15M14.25 3.104c.251.023.501.05.75.082M19.8 15a2.25 2.25 0 01-2.15 1.5H6.35A2.25 2.25 0 014.2 15M19.8 15v-3M4.2 15v-3" />
-                            </svg>
+                                class="category-btn relative flex-shrink-0 inline-flex items-center gap-2 pb-3 text-sm font-medium transition-colors text-white/50 hover:text-white">
+                            <span class="absolute bottom-0 left-0 w-full h-[2px] bg-premium-gold scale-x-0 transition-transform origin-left"></span>
                             Coffee
                         </button>
                         <button type="button" data-category="non-coffee"
-                                class="category-btn flex-shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-250 bg-transparent text-[var(--gold)] border border-[rgba(184,146,74,0.3)] hover:border-[var(--gold)]">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1A3.75 3.75 0 0012 18z" />
-                            </svg>
+                                class="category-btn relative flex-shrink-0 inline-flex items-center gap-2 pb-3 text-sm font-medium transition-colors text-white/50 hover:text-white">
+                            <span class="absolute bottom-0 left-0 w-full h-[2px] bg-premium-gold scale-x-0 transition-transform origin-left"></span>
                             Non Coffee
                         </button>
                         <button type="button" data-category="food"
-                                class="category-btn flex-shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-250 bg-transparent text-[var(--gold)] border border-[rgba(184,146,74,0.3)] hover:border-[var(--gold)]">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8.25v-1.5m0 1.5c-1.355 0-2.697.056-4.024.166C6.845 8.51 6 9.473 6 10.608v2.513m6-4.871c1.355 0 2.697.056 4.024.166C17.155 8.51 18 9.473 18 10.608v2.513M15 8.25v-1.5m-6 1.5v-1.5m12 9.75l-1.5.75a3.354 3.354 0 01-3 0 3.354 3.354 0 00-3 0 3.354 3.354 0 01-3 0 3.354 3.354 0 00-3 0 3.354 3.354 0 01-3 0L3 16.5m15-3.379a48.474 48.474 0 00-6-.371c-2.032 0-4.034.126-6 .371m12 0c.39.049.777.102 1.163.16 1.07.16 1.837 1.094 1.837 2.175v5.169c0 .621-.504 1.125-1.125 1.125H4.125A1.125 1.125 0 013 20.625v-5.169c0-1.08.768-2.014 1.837-2.175A47.78 47.78 0 016 13.12M12.265 3.11a.375.375 0 11-.53 0L12 2.845l.265.265zm-3 0a.375.375 0 11-.53 0L9 2.845l.265.265zm6 0a.375.375 0 11-.53 0L15 2.845l.265.265z" />
-                            </svg>
+                                class="category-btn relative flex-shrink-0 inline-flex items-center gap-2 pb-3 text-sm font-medium transition-colors text-white/50 hover:text-white">
+                            <span class="absolute bottom-0 left-0 w-full h-[2px] bg-premium-gold scale-x-0 transition-transform origin-left"></span>
                             Food
                         </button>
                         <button type="button" data-category="snack"
-                                class="category-btn flex-shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-250 bg-transparent text-[var(--gold)] border border-[rgba(184,146,74,0.3)] hover:border-[var(--gold)]">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 109.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1114.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-                            </svg>
+                                class="category-btn relative flex-shrink-0 inline-flex items-center gap-2 pb-3 text-sm font-medium transition-colors text-white/50 hover:text-white">
+                            <span class="absolute bottom-0 left-0 w-full h-[2px] bg-premium-gold scale-x-0 transition-transform origin-left"></span>
                             Snacks
                         </button>
                     </div>
@@ -419,7 +398,7 @@
 
                             <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 auto-rows-fr">
                                 @foreach($products[$categoryKey] as $product)
-                                <div class="product-card premium-card gold-border-animate bg-premium-brown/50 rounded-2xl overflow-hidden border border-premium-gold/20 cursor-pointer relative group flex flex-col h-full"
+                                <div class="product-card premium-card bg-white/[0.02] backdrop-blur-md rounded-2xl overflow-hidden border border-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] cursor-pointer relative group flex flex-col h-full"
                                      data-product-id="{{ $product->id }}"
                                      data-product-name="{{ $product->name }}"
                                      data-product-price="{{ $product->final_price }}"
@@ -1082,15 +1061,20 @@
                 
                 // Update active button styles
                 document.querySelectorAll('.category-btn').forEach(b => {
-                    b.style.backgroundColor = 'transparent';
-                    b.style.color = 'var(--gold)';
-                    b.style.borderColor = 'rgba(184,146,74,0.3)';
-                    b.style.fontWeight = '500';
+                    b.classList.remove('text-white');
+                    b.classList.add('text-white/50');
+                    const line = b.querySelector('span');
+                    if (line) line.classList.replace('scale-x-100', 'scale-x-0');
+                    if (line && !line.classList.contains('scale-x-0')) line.classList.add('scale-x-0');
                 });
-                this.style.backgroundColor = 'var(--gold)';
-                this.style.color = 'var(--black)';
-                this.style.borderColor = 'var(--gold)';
-                this.style.fontWeight = '600';
+                
+                this.classList.remove('text-white/50');
+                this.classList.add('text-white');
+                const activeLine = this.querySelector('span');
+                if (activeLine) {
+                    activeLine.classList.remove('scale-x-0');
+                    activeLine.classList.add('scale-x-100');
+                }
                 
                 // Filter products
                 document.querySelectorAll('.category-section').forEach(section => {
